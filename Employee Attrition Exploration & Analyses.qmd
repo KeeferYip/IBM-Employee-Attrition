@@ -1,0 +1,63 @@
+---
+title: "Employee Attrition Exploration & Analyses"
+subtitle: "A People Analytics Practice Project"
+format: 
+  html:
+    toc: true
+execute:
+    warning: false
+    message: false
+editor: visual
+---
+
+## Setup
+
+```{r}
+#| label: setup
+
+# Load necessary packages
+library(tidyverse)
+library(ggplot2)
+library(janitor)
+```
+
+### Importing Data
+
+```{r}
+#| label: data-import
+
+# Load the dataset
+hr_data <- read_csv("data/WA_Fn-UseC_-HR-Employee-Attrition.csv")
+```
+
+### Initial Inspection
+
+```{r}
+# Examining an overview of the dataset
+glimpse(hr_data)
+```
+
+## Cleaning
+
+```{r}
+#| label: data cleaning
+# Standardized column names
+hr_data <- janitor::clean_names(hr_data) %>% 
+
+# Removed standardized columns and irrelevant variables to following analyses
+  select(-any_of(c("employee_count", "standard_hours", "over18")))
+
+
+hr_data <- hr_data %>% 
+# Convert appropriate variables into ordinal factors  
+  mutate(job_involvement = factor(job_involvement, 
+                                  levels = 1:4, 
+                                  labels = c("Low", "Medium", "High", "Very High")), 
+         job_satisfaction = factor(job_satisfaction, 
+                                  levels = 1:4, 
+                                  labels = c("Low", "Medium", "High", "Very High")))%>% 
+
+# Convert appropriate variables into nominal factors
+  mutate(across(c(attrition, business_travel, department, education_field, 
+                  gender, job_role, marital_status, over_time), as.factor))
+```
