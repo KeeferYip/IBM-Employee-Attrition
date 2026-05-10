@@ -2,7 +2,7 @@
 title: "Employee Attrition Exploration & Analyses"
 subtitle: "A People Analytics Practice Project"
 format: 
-  html:
+  gfm:
     toc: true
 execute:
     warning: false
@@ -10,7 +10,7 @@ execute:
 editor: visual
 ---
 
-## Setup
+## *Setup*
 
 ```{r}
 #| label: setup
@@ -21,7 +21,7 @@ library(ggplot2)
 library(janitor)
 ```
 
-### Importing Data
+### *Importing Data*
 
 ```{r}
 #| label: data-import
@@ -30,14 +30,14 @@ library(janitor)
 hr_data <- read_csv("data/WA_Fn-UseC_-HR-Employee-Attrition.csv")
 ```
 
-### Initial Inspection
+### *Initial Inspection*
 
 ```{r}
 # Examining an overview of the dataset
 glimpse(hr_data)
 ```
 
-## Cleaning
+# *Cleaning*
 
 ```{r}
 #| label: data cleaning
@@ -54,10 +54,42 @@ hr_data <- hr_data %>%
                                   levels = 1:4, 
                                   labels = c("Low", "Medium", "High", "Very High")), 
          job_satisfaction = factor(job_satisfaction, 
-                                  levels = 1:4, 
-                                  labels = c("Low", "Medium", "High", "Very High")))%>% 
-
+                                   levels = 1:4, 
+                                   labels = c("Low", "Medium", "High", "Very High")),
+         education = factor(education, 
+                                  levels = 1:5,
+                                  labels = c("Below College", "College", 
+                                             "Bachelor", "Master", "Doctor"))
+  ) %>% 
 # Convert appropriate variables into nominal factors
   mutate(across(c(attrition, business_travel, department, education_field, 
                   gender, job_role, marital_status, over_time), as.factor))
+```
+
+# *Analyses*
+
+```{r}
+#| label: analyses
+
+# Created a new table highlighting employees who attrited, selecting some specific variables
+attrition_data <- hr_data %>% 
+  filter(attrition == "Yes") %>% 
+  select(employee_number, distance_from_home, education, environment_satisfaction, 
+         job_involvement, job_level, job_satisfaction, 
+         num_companies_worked:last_col())
+
+```
+
+## (RENAME) Education Insights (RENAME)
+
+```{r}
+# Created a new table to gain insight on employees based on their education level
+education_data <- attrition_data %>% 
+  select(employee_number, education:job_satisfaction, percent_salary_hike, 
+         total_working_years, years_at_company:years_since_last_promotion)
+
+# Finding which level of education has had the highest attrition rate
+hr_data %>% 
+group_by(education) %>% 
+  summarize(attrition_rate = mean(attrition == "Yes"))
 ```
