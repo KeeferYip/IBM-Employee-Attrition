@@ -1,8 +1,10 @@
 ---
 title: "Employee Attrition Exploration & Analyses"
 subtitle: "A People Analytics Practice Project"
+author: "Keefer Yip"
 format: 
-  gfm:
+  html:
+    theme: sandstone
     toc: true
 execute:
     warning: false
@@ -10,7 +12,7 @@ execute:
 editor: visual
 ---
 
-## *Setup*
+## Setup
 
 ```{r}
 #| label: setup
@@ -21,7 +23,7 @@ library(ggplot2)
 library(janitor)
 ```
 
-### *Importing Data*
+### Importing Data
 
 ```{r}
 #| label: data-import
@@ -30,14 +32,14 @@ library(janitor)
 hr_data <- read_csv("data/WA_Fn-UseC_-HR-Employee-Attrition.csv")
 ```
 
-### *Initial Inspection*
+### Initial Inspection
 
 ```{r}
 # Examining an overview of the dataset
 glimpse(hr_data)
 ```
 
-# *Cleaning*
+# Cleaning
 
 ```{r}
 #| label: data cleaning
@@ -66,12 +68,12 @@ hr_data <- hr_data %>%
                   gender, job_role, marital_status, over_time), as.factor))
 ```
 
-# *Analyses*
+# Analyses
 
 ```{r}
 #| label: analyses
 
-# Created a new table highlighting employees who attrited, selecting some specific variables
+# Created a new table highlighting employees who attritted, selecting some specific variables
 attrition_data <- hr_data %>% 
   filter(attrition == "Yes") %>% 
   select(employee_number, distance_from_home, education, environment_satisfaction, 
@@ -89,7 +91,80 @@ education_data <- attrition_data %>%
          total_working_years, years_at_company:years_since_last_promotion)
 
 # Finding which level of education has had the highest attrition rate
-hr_data %>% 
+ed_df <- hr_data %>% 
 group_by(education) %>% 
-  summarize(attrition_rate = mean(attrition == "Yes"))
+  summarize(attrition_rate = round((mean(attrition == "Yes")) * 100, 2))
+
+# Displaying the attrition rates of each education level
+knitr::kable(ed_df)
+```
+
+As seen, the education level with the highest rate of attrition was the employees who had a "Below College" level, with a rate of `r max(ed_df$attrition_rate)`%. Conversely, the education level with the lowest rate of attrition was the employees with a "Doctor" level education, with a rate of `r min(ed_df$attrition_rate)`%.
+
+#### Graph of Breakdown by Years Since Last Promotion
+
+```{r}
+#| label: Graphing
+
+# Created theme for following plots
+promo_theme <- theme_classic() +
+  theme(
+        axis.title = element_text(size = 12),
+        legend.text = element_text(size = 12))
+
+# Created graph to show the count of employees who attritted based on years since their last promotion
+promo_graph_count <- education_data %>% 
+  mutate(years_bucket = cut(years_since_last_promotion,
+                            breaks = c(0, 3, 6, 9, 12, 15),
+                            labels = c("0-3", "4-6", "7-9", "10-12", "13-15"),
+                            include.lowest = TRUE)) %>%
+  ggplot(aes(years_bucket, 
+             fill = education)) + 
+  scale_x_discrete("Years Since Last Promotion") +
+  scale_y_continuous("Count", expand = c(0,0)) +
+  geom_bar(position = "dodge", width = .8) +
+  labs(title = "Breakdown of Attrition by Years Since Last Promotion", 
+       fill = "Education Level") +
+  promo_theme +
+  scale_fill_brewer(palette = "Accent")
+      
+promo_graph_count
+```
+
+#### Graph displaying count above, graph displaying proportion below
+
+```{r}
+#| code-fold: true
+
+# Created table and graph to show the proportion of employees who attritted based on years since their last promotion
+promo_prop_df <- education_data %>% 
+  mutate(years_bucket = cut(years_since_last_promotion,
+                            breaks = c(0, 3, 6, 9, 12, 15),
+                            labels = c("0-3", "4-6", "7-9", "10-12", "13-15"),
+                            include.lowest = TRUE)) %>%
+  count(years_bucket, education) 
+
+# Table to display the breakdown into each bucket
+knitr::kable(promo_prop_df)
+
+promo_graph_prop <- promo_prop_df %>% 
+  mutate(prop = n / sum(n)) %>% 
+  ggplot(aes(years_bucket, 
+             prop,
+             fill = education)) + 
+  scale_x_discrete("Years Since Last Promotion") +
+  scale_y_continuous("Proportion", expand = c(0,0)) +
+  geom_col(position = "dodge", width = .8) +
+  labs(title = "Breakdown of Attrition by Years Since Last Promotion", 
+       fill = "Education Level") +
+  promo_theme + 
+  scale_fill_brewer(palette = "Accent")
+      
+promo_graph_prop
+```
+
+```{r}
+# Created a new table for employees who were at the company for less than a year
+new_employees <- education_data %>%
+  filter(years_at_company == 0) 
 ```
