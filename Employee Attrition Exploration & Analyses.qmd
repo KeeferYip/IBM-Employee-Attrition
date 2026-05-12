@@ -82,7 +82,39 @@ attrition_data <- hr_data %>%
 
 ```
 
-## (RENAME) Education Insights (RENAME)
+## Engagement Insights
+
+```{r}
+#| label: Job Involvement and Satisfaction graph
+
+# Created a new table to display the attrition rates of each job involvement and satisfaction pair
+engagement_df <- hr_data %>% 
+  group_by(job_involvement, job_satisfaction) %>% 
+  summarize(attrition_rate = round((mean(attrition == "Yes")) * 100, 2))
+
+# Created theme for following plots
+graph_theme <- theme_classic() +
+  theme(
+    axis.title = element_text(size = 12),
+    legend.text = element_text(size = 12))
+
+# Created heatmap showcasing the relationship between the two variables
+engagement_heatmap <- ggplot(engagement_df) + 
+  geom_tile(aes(x = job_involvement, 
+                y = job_satisfaction, 
+                fill = attrition_rate)) +
+  scale_fill_gradient() +
+  labs(x = "Job Involvement", 
+       y = "Job Satisfaction",
+       title = "Job Engagement Heatmap",
+       fill = "Attrition Rate") +
+  theme_classic() +
+  graph_theme
+
+engagement_heatmap
+```
+
+## Education Insights
 
 ```{r}
 # Created a new table to gain insight on employees based on their education level
@@ -106,12 +138,6 @@ As seen, the education level with the highest rate of attrition was the employee
 ```{r}
 #| label: Graphing
 
-# Created theme for following plots
-promo_theme <- theme_classic() +
-  theme(
-        axis.title = element_text(size = 12),
-        legend.text = element_text(size = 12))
-
 # Created graph to show the count of employees who attritted based on years since their last promotion
 promo_graph_count <- education_data %>% 
   mutate(years_bucket = cut(years_since_last_promotion,
@@ -125,7 +151,7 @@ promo_graph_count <- education_data %>%
   geom_bar(position = "dodge", width = .8) +
   labs(title = "Breakdown of Attrition by Years Since Last Promotion", 
        fill = "Education Level") +
-  promo_theme +
+  graph_theme +
   scale_fill_brewer(palette = "Accent")
       
 promo_graph_count
@@ -157,14 +183,12 @@ promo_graph_prop <- promo_prop_df %>%
   geom_col(position = "dodge", width = .8) +
   labs(title = "Breakdown of Attrition by Years Since Last Promotion", 
        fill = "Education Level") +
-  promo_theme + 
+  graph_theme + 
   scale_fill_brewer(palette = "Accent")
       
 promo_graph_prop
 ```
 
 ```{r}
-# Created a new table for employees who were at the company for less than a year
-new_employees <- education_data %>%
-  filter(years_at_company == 0) 
+
 ```
