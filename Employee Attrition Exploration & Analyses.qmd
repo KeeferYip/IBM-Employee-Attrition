@@ -133,6 +133,12 @@ knitr::kable(ed_df)
 
 As seen, the education level with the highest rate of attrition was the employees who had a "Below College" level, with a rate of `r max(ed_df$attrition_rate)`%. Conversely, the education level with the lowest rate of attrition was the employees with a "Doctor" level education, with a rate of `r min(ed_df$attrition_rate)`%.
 
+```{r}
+#| include: false
+range(hr_data$years_since_last_promotion)
+
+```
+
 #### Graph of Breakdown by Years Since Last Promotion
 
 ```{r}
@@ -174,8 +180,9 @@ promo_prop_df <- education_data %>%
 knitr::kable(promo_prop_df)
 
 promo_graph_prop <- promo_prop_df %>% 
+  group_by(years_bucket) %>% 
   mutate(prop = n / sum(n)) %>% 
-  ggplot(aes(years_bucket, 
+  ggplot(aes(years_bucket,
              prop,
              fill = education)) + 
   scale_x_discrete("Years Since Last Promotion") +
