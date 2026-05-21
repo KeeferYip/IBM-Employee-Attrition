@@ -49,23 +49,43 @@ hr_data <- janitor::clean_names(hr_data) %>%
 # Removed standardized columns and irrelevant variables to following analyses
   select(-any_of(c("employee_count", "standard_hours", "over18")))
 
+# Creating vector for following ordinal factor creation, all have the same factor levels and labels
+satisfaction_vars <- c("job_involvement", "job_satisfaction", 
+                       "environment_satisfaction", "relationship_satisfaction")
 
 hr_data <- hr_data %>% 
-# Convert appropriate variables into ordinal factors  
-  mutate(job_involvement = factor(job_involvement, 
-                                  levels = 1:4, 
-                                  labels = c("Low", "Medium", "High", "Very High")), 
-         job_satisfaction = factor(job_satisfaction, 
-                                   levels = 1:4, 
-                                   labels = c("Low", "Medium", "High", "Very High")),
-         education = factor(education, 
-                                  levels = 1:5,
-                                  labels = c("Below College", "College", 
-                                             "Bachelor", "Master", "Doctor"))
-  ) %>% 
-# Convert appropriate variables into nominal factors
-  mutate(across(c(attrition, business_travel, department, education_field, 
-                  gender, job_role, marital_status, over_time), as.factor))
+  mutate(
+    # Ordinal factor creation for satisfaction variables
+    across(
+      all_of(satisfaction_vars),
+      ~ factor(.,
+               levels = 1:4,
+               labels = c("Low", "Medium", "High", "Very High"),
+               ordered = TRUE)
+    ),
+    # Ordinal factor for work life balance (has different labels than satisfaction)
+    work_life_balance = factor(
+      work_life_balance,
+      levels = 1:4,
+      labels = c("Bad", "Good", "Better", "Best"),
+      ordered = TRUE
+    ),
+    # Ordinal factor for education 
+    education = factor(
+      education,
+      levels = 1:5,
+      labels = c("Below College", "College",
+                 "Bachelor", "Master", "Doctor"),
+      ordered = TRUE
+    ),
+    
+    # Nominal categorical variables
+    across(
+      c(attrition, business_travel, department, education_field,
+        gender, job_role, marital_status, over_time),
+      as.factor
+    )
+  )
 ```
 
 # Analyses
@@ -196,6 +216,16 @@ promo_graph_prop <- promo_prop_df %>%
 promo_graph_prop
 ```
 
+## Commute and Satisfaction
+
+How does Commute influence Satisfaction?
+
 ```{r}
+#| label: Organizing Data
+
+commute_data <- hr_data %>% 
+  select(employee_number, distance_from_home, 
+         ends_with("_satisfaction"), work_life_balance, attrition)
+
 
 ```
