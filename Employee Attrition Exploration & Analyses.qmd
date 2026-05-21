@@ -49,11 +49,18 @@ hr_data <- janitor::clean_names(hr_data) %>%
 # Removed standardized columns and irrelevant variables to following analyses
   select(-any_of(c("employee_count", "standard_hours", "over18")))
 
+# Created first data branch, for feature analysis
+hr_features <- hr_data %>% 
+  select(employee_number, distance_from_home, 
+         ends_with("_satisfaction"), work_life_balance, attrition) 
+
+
 # Creating vector for following ordinal factor creation, all have the same factor levels and labels
 satisfaction_vars <- c("job_involvement", "job_satisfaction", 
                        "environment_satisfaction", "relationship_satisfaction")
 
-hr_data <- hr_data %>% 
+# Created second data branch for EDA
+hr_eda <- hr_data %>% 
   mutate(
     # Ordinal factor creation for satisfaction variables
     across(
@@ -94,7 +101,7 @@ hr_data <- hr_data %>%
 #| label: analyses
 
 # Created a new table highlighting employees who attritted, selecting some specific variables
-attrition_data <- hr_data %>% 
+attrition_data <- hr_eda %>% 
   filter(attrition == "Yes") %>% 
   select(employee_number, distance_from_home, education, environment_satisfaction, 
          job_involvement, job_level, job_satisfaction, 
@@ -108,7 +115,7 @@ attrition_data <- hr_data %>%
 #| label: Job Involvement and Satisfaction graph
 
 # Created a new table to display the attrition rates of each job involvement and satisfaction pair
-engagement_df <- hr_data %>% 
+engagement_df <- hr_eda %>% 
   group_by(job_involvement, job_satisfaction) %>% 
   summarize(attrition_rate = round((mean(attrition == "Yes")) * 100, 2))
 
@@ -143,7 +150,7 @@ education_data <- attrition_data %>%
          total_working_years, years_at_company:years_since_last_promotion)
 
 # Finding which level of education has had the highest attrition rate
-ed_df <- hr_data %>% 
+ed_df <- hr_eda %>% 
 group_by(education) %>% 
   summarize(attrition_rate = round((mean(attrition == "Yes")) * 100, 2))
 
@@ -155,7 +162,7 @@ As seen, the education level with the highest rate of attrition was the employee
 
 ```{r}
 #| include: false
-range(hr_data$years_since_last_promotion)
+range(hr_eda$years_since_last_promotion)
 
 ```
 
@@ -223,9 +230,8 @@ How does Commute influence Satisfaction?
 ```{r}
 #| label: Organizing Data
 
-commute_data <- hr_data %>% 
-  select(employee_number, distance_from_home, 
-         ends_with("_satisfaction"), work_life_balance, attrition)
+# Engineered new feature, sat_index that takes the average of the satisafction variables
+
 
 
 ```
