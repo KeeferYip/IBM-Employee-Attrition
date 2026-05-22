@@ -230,8 +230,28 @@ How does Commute influence Satisfaction?
 ```{r}
 #| label: Organizing Data
 
-# Engineered new feature, sat_index that takes the average of the satisafction variables
+# Engineered new feature, satisfaction_index that takes the average of the satisafction variables
+hr_features <- hr_features %>% 
+  mutate(
+    satisfaction_index = (
+      environment_satisfaction + 
+        job_satisfaction +  
+        relationship_satisfaction + 
+        work_life_balance
+      ) / 4
+    )
+
+# Graph the relationship between satisfaction and attrition
+ggplot(hr_features, aes(satisfaction_index, attrition)) +
+  geom_boxplot()
+
+# Graph the relationship between commute distance and attrition
+ggplot(hr_features, aes(distance_from_home, attrition)) +
+  geom_boxplot()
 
 
-
+# Graph the relationship between commute distance and satisfaction
+ggplot(hr_features, aes(distance_from_home, satisfaction_index)) +
+  geom_jitter(alpha = 0.2, width = 0.3) +
+  geom_smooth(method = "loess")
 ```
