@@ -51,8 +51,9 @@ hr_data <- janitor::clean_names(hr_data) %>%
 
 # Created first data branch, for feature analysis
 hr_features <- hr_data %>% 
-  select(employee_number, distance_from_home, 
-         ends_with("_satisfaction"), work_life_balance, attrition) 
+  select(employee_number, attrition, age, 
+         years_at_company, over_time, distance_from_home, 
+         ends_with("_satisfaction"), work_life_balance) 
 
 
 # Creating vector for following ordinal factor creation, all have the same factor levels and labels
@@ -141,6 +142,45 @@ engagement_heatmap <- ggplot(engagement_df) +
 engagement_heatmap
 ```
 
+## Commute and Satisfaction
+
+How does Commute influence Satisfaction?
+
+I took a snapshot into various insights of potential areas that may serve as some explanation to why employees engage in attrition. The following graphs outline the relationship between several factors: commute distance, satisfaction, and attrition. \[REWORD\]
+
+Created new feature, satisfaction_index... (Important to discuss because I use it later as well)
+
+```{r}
+#| label: Organizing Data
+
+# Engineered new feature, satisfaction_index that takes the average of the satisafction variables
+hr_features <- hr_features %>% 
+  mutate(
+    satisfaction_index = (
+      environment_satisfaction + 
+        job_satisfaction +  
+        relationship_satisfaction + 
+        work_life_balance
+      ) / 4
+    )
+
+# Graph the relationship between satisfaction and attrition
+ggplot(hr_features, aes(satisfaction_index, attrition)) +
+  geom_boxplot()
+
+# Graph the relationship between commute distance and attrition
+ggplot(hr_features, aes(distance_from_home, attrition)) +
+  geom_boxplot()
+
+
+# Graph the relationship between commute distance and satisfaction
+ggplot(hr_features, aes(distance_from_home, satisfaction_index)) +
+  geom_jitter(alpha = 0.2, width = 0.3) +
+  geom_smooth(method = "loess")
+```
+
+The graphs mentioned above show that satisfaction is lower and commute distance slightly higher for employees experiencing attrition, although there isn't a strong relationship between satisfaction and commute distance themselves.
+
 ## Education Insights
 
 ```{r}
@@ -223,35 +263,56 @@ promo_graph_prop <- promo_prop_df %>%
 promo_graph_prop
 ```
 
-## Commute and Satisfaction
+## Early Career Burnout?
 
-How does Commute influence Satisfaction?
+Are younger/newer employees with overtime and lower satisfaction more likely to leave?
+
+Multi-layered hypothesis:
+
+Early-career employees leave more.
+
+Overtime increases attrition.
+
+Low satisfaction and overtime lead to extreme attrition.
 
 ```{r}
-#| label: Organizing Data
+#| label: EDA before analyses and graphs
 
-# Engineered new feature, satisfaction_index that takes the average of the satisafction variables
+# Created segments for employee career stages and satisfaction 
 hr_features <- hr_features %>% 
   mutate(
-    satisfaction_index = (
-      environment_satisfaction + 
-        job_satisfaction +  
-        relationship_satisfaction + 
-        work_life_balance
-      ) / 4
+    career_stage = case_when(
+      years_at_company <= 2 ~ "Early Career",
+      years_at_company <= 7 ~ "Mid Career",
+      TRUE ~ "Established"),
+      satisfaction_group = case_when(
+        satisfaction_index <= 2 ~ "Low",
+        satisfaction_index <= 3 ~ "Medium",
+        TRUE ~ "High"
+      )
     )
 
-# Graph the relationship between satisfaction and attrition
-ggplot(hr_features, aes(satisfaction_index, attrition)) +
-  geom_boxplot()
+# Examining the attrition rate across career stages
+hr_features %>% 
+group_by(career_stage) %>% 
+  summarize(n = n(),
+            attrition_rate = mean(attrition == "Yes")) %>% 
+  arrange(desc(attrition_rate))
 
-# Graph the relationship between commute distance and attrition
-ggplot(hr_features, aes(distance_from_home, attrition)) +
-  geom_boxplot()
+# Examining attrition rate across career stages and OT
+hr_features %>% 
+  group_by(career_stage, over_time) %>% 
+  summarize(
+    n = n(),
+    attrition_rate = mean(attrition == "Yes")
+  ) %>% 
+  arrange(desc(attrition_rate))
 
 
-# Graph the relationship between commute distance and satisfaction
-ggplot(hr_features, aes(distance_from_home, satisfaction_index)) +
-  geom_jitter(alpha = 0.2, width = 0.3) +
-  geom_smooth(method = "loess")
+```
+
+```{r}
+#| label: Analyses
+
+
 ```
