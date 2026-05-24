@@ -326,16 +326,17 @@ We see that employees in the early stages of their career and have overtime are 
 ```{r}
 #| label: Analyses
 
-# Created a risk table 
+# Created a risk table to showcase the 5 groups with the highest attrition rates
 risk_table <- hr_features %>% 
   group_by(career_stage, over_time, satisfaction_group) %>% 
   summarize(
     n = n(), 
-    attrition_rate = mean(attrition == "Yes")
+    attrition_rate = round((mean(attrition == "Yes")) * 100, 2)
     ) %>% 
-  arrange(desc(attrition_rate))
+  ungroup() %>% 
+  slice_max(attrition_rate, n = 5)
 
-risk_table
+knitr::kable(risk_table)
 
 # Create a graph to display effects of overtime on different career stages
 overtime_graph <- ggplot(hr_features, aes(x = career_stage, fill = attrition)) +
