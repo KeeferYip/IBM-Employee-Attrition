@@ -285,12 +285,22 @@ hr_features <- hr_features %>%
       years_at_company <= 2 ~ "Early Career",
       years_at_company <= 7 ~ "Mid Career",
       TRUE ~ "Established"),
-      satisfaction_group = case_when(
-        satisfaction_index <= 2 ~ "Low",
-        satisfaction_index <= 3 ~ "Medium",
-        TRUE ~ "High"
-      )
+    satisfaction_group = case_when(
+      satisfaction_index <= 2 ~ "Low",
+      satisfaction_index <= 3 ~ "Medium",
+      TRUE ~ "High"
+    ),
+    # Turn segments into ordered factors
+    career_stage = factor(
+      career_stage, 
+      levels = c("Early Career", "Mid Career", "Established")
+    ),
+    satisfaction_group = factor(
+      satisfaction_group, 
+      levels = c("Low", "Medium", "High")
     )
+  )
+
 
 # Examining the attrition rate across career stages
 hr_features %>% 
@@ -327,7 +337,41 @@ risk_table <- hr_features %>%
 
 risk_table
 
-ggplot(hr_features, aes(x = satisfaction_group, fill = attrition)) +
+# Create a graph to display effects of overtime on different career stages
+overtime_graph <- ggplot(hr_features, aes(x = career_stage, fill = attrition)) +
   geom_bar(position = "fill") +
-  facet_grid(career_stage ~ over_time)
+  facet_grid(~ over_time, 
+             labeller = labeller(
+               over_time = c("No" = "No Overtime", 
+                             "Yes" = "Overtime")
+             )
+  ) + 
+  labs(title = "Attrition Patterns Across Career Stages and Overtime",
+       x = "Career Stage",
+       y = "Proportion") +
+  graph_theme 
+
+overtime_graph
+
+# Deeper dive into early career employees and their satisfaction
+early_career <- hr_features %>% 
+  filter(career_stage == "Early Career") 
+
+early_overtime_graph <- ggplot(early_career, 
+                               aes(x = satisfaction_group, fill = attrition)) +
+  geom_bar(position = "fill") +
+  facet_wrap(~ over_time, 
+             labeller = labeller(
+               over_time = c("No" = "No Overtime", 
+                             "Yes" = "Overtime")
+             )
+  ) +
+  labs(
+    title = "Early Career Attrition: Effects of Satisfaction and Overtime",
+    x = "Satisfaction",
+    y = "Proportion"
+  ) +
+  graph_theme
+
+early_overtime_graph
 ```
