@@ -311,8 +311,23 @@ hr_features %>%
 
 ```
 
+We see that employees in the early stages of their career and have overtime are more likely to engage in attrition. However, I wanted to take it a step further by examining the satisfaction of these groups.
+
 ```{r}
 #| label: Analyses
 
+# Created a risk table 
+risk_table <- hr_features %>% 
+  group_by(career_stage, over_time, satisfaction_group) %>% 
+  summarize(
+    n = n(), 
+    attrition_rate = mean(attrition == "Yes")
+    ) %>% 
+  arrange(desc(attrition_rate))
 
+risk_table
+
+ggplot(hr_features, aes(x = satisfaction_group, fill = attrition)) +
+  geom_bar(position = "fill") +
+  facet_grid(career_stage ~ over_time)
 ```
