@@ -150,6 +150,8 @@ I took a snapshot into various insights of potential areas that may serve as som
 
 Created new feature, satisfaction_index... (Important to discuss because I use it later as well)
 
+\*Note that commute distance does not have a unit because the data set is not specific
+
 ```{r}
 #| label: Organizing Data
 
@@ -166,17 +168,32 @@ hr_features <- hr_features %>%
 
 # Graph the relationship between satisfaction and attrition
 ggplot(hr_features, aes(satisfaction_index, attrition)) +
-  geom_boxplot()
+  geom_boxplot() +
+  labs(
+    title = "Satisfaction Index and Attrition", 
+    x = "Satisfaction Index", 
+    y = "Attrition") +
+  graph_theme
 
 # Graph the relationship between commute distance and attrition
 ggplot(hr_features, aes(distance_from_home, attrition)) +
-  geom_boxplot()
+  geom_boxplot() +
+  labs(
+    title = "Commute and Attrition", 
+    x = "Commute Distance", 
+    y = "Attrition") +
+  graph_theme
 
 
 # Graph the relationship between commute distance and satisfaction
 ggplot(hr_features, aes(distance_from_home, satisfaction_index)) +
   geom_jitter(alpha = 0.2, width = 0.3) +
-  geom_smooth(method = "loess")
+  geom_smooth(method = "loess") +
+  labs(
+    title = "Commute and Satisfaction", 
+    x = "Commute Distance", 
+    y = "Satisfaction Index") +
+  graph_theme
 ```
 
 The graphs mentioned above show that satisfaction is lower and commute distance slightly higher for employees experiencing attrition, although there isn't a strong relationship between satisfaction and commute distance themselves.
@@ -225,7 +242,7 @@ promo_graph_count <- education_data %>%
   labs(title = "Breakdown of Attrition by Years Since Last Promotion", 
        fill = "Education Level") +
   graph_theme +
-  scale_fill_brewer(palette = "Accent")
+  scale_fill_brewer(palette = "Blues")
       
 promo_graph_count
 ```
@@ -258,7 +275,7 @@ promo_graph_prop <- promo_prop_df %>%
   labs(title = "Breakdown of Attrition by Years Since Last Promotion", 
        fill = "Education Level") +
   graph_theme + 
-  scale_fill_brewer(palette = "Accent")
+  scale_fill_brewer(palette = "Blues")
       
 promo_graph_prop
 ```
@@ -304,9 +321,11 @@ hr_features <- hr_features %>%
 
 # Examining the attrition rate across career stages
 hr_features %>% 
-group_by(career_stage) %>% 
-  summarize(n = n(),
-            attrition_rate = mean(attrition == "Yes")) %>% 
+  group_by(career_stage) %>% 
+  summarize(
+    n = n(),
+    attrition_rate = round((mean(attrition == "Yes")) * 100, 2) 
+  )%>% 
   arrange(desc(attrition_rate))
 
 # Examining attrition rate across career stages and OT
@@ -314,7 +333,7 @@ hr_features %>%
   group_by(career_stage, over_time) %>% 
   summarize(
     n = n(),
-    attrition_rate = mean(attrition == "Yes")
+    attrition_rate = round((mean(attrition == "Yes")) * 100, 2)
   ) %>% 
   arrange(desc(attrition_rate))
 
@@ -350,7 +369,8 @@ overtime_graph <- ggplot(hr_features, aes(x = career_stage, fill = attrition)) +
   labs(title = "Attrition Patterns Across Career Stages and Overtime",
        x = "Career Stage",
        y = "Proportion") +
-  graph_theme 
+  graph_theme +
+  scale_fill_manual(values = c("No" = "grey80", "Yes" = "#D55E00"))
 
 overtime_graph
 
@@ -372,7 +392,8 @@ early_overtime_graph <- ggplot(early_career,
     x = "Satisfaction",
     y = "Proportion"
   ) +
-  graph_theme
+  graph_theme +
+  scale_fill_manual(values = c("No" = "grey80", "Yes" = "#D55E00"))
 
 early_overtime_graph
 ```
