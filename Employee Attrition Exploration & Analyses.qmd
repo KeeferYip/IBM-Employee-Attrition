@@ -45,7 +45,7 @@ glimpse(hr_data)
 # Standardized column names
 hr_data <- janitor::clean_names(hr_data) %>% 
 
-# Removed standardized columns and irrelevant variables to following analyses
+# Removed irrelevant variables 
   select(-any_of(c("employee_count", "standard_hours", "over18")))
 
 # Created first data branch, for feature analysis
@@ -85,7 +85,6 @@ hr_eda <- hr_data %>%
                  "Bachelor", "Master", "Doctor"),
       ordered = TRUE
     ),
-    
     # Nominal categorical variables
     across(
       c(attrition, business_travel, department, education_field,
@@ -98,7 +97,7 @@ hr_eda <- hr_data %>%
 # Analyses
 
 ```{r}
-#| label: analyses
+#| label: Preparation for analyses
 
 # Created a new table highlighting employees who attritted, selecting some specific variables
 attrition_data <- hr_eda %>% 
@@ -141,6 +140,8 @@ engagement_heatmap <- ggplot(engagement_df) +
 engagement_heatmap
 ```
 
+The heatmap shows that attrition rates are lowest at the extreme highs of job involvement and satisfaction. In fact, the rate for employees with both very high job involvement and satisfaction is `r min(engagement_df$attrition_rate)`%. As shown in the graphic, as these engagement levels decrease, attrition rates tend to increase.
+
 ## Commute and Satisfaction
 
 How does Commute influence Satisfaction?
@@ -154,7 +155,7 @@ Created new feature, satisfaction_index... (Important to discuss because I use i
 ```{r}
 #| label: Organizing Data
 
-# Engineered new feature, satisfaction_index that takes the average of the satisafction variables
+# Engineered new feature, satisfaction_index that takes the average of the satisfaction variables
 hr_features <- hr_features %>% 
   mutate(
     satisfaction_index = (
