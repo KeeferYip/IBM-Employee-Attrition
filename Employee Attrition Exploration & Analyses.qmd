@@ -32,8 +32,6 @@ library(janitor)
 hr_data <- read_csv("data/WA_Fn-UseC_-HR-Employee-Attrition.csv")
 ```
 
-### Initial Inspection
-
 ```{r}
 #| include: false
 # Examining an overview of the dataset
@@ -226,9 +224,9 @@ range(hr_eda$years_since_last_promotion)
 #### Graph of Breakdown by Years Since Last Promotion
 
 ```{r}
-#| label: Graphing
+#| label: Education x Promotion Graphing
 
-# Created graph to show the count of employees who attritted based on years since their last promotion
+# Created graph showing employees who attritted based on years since their last promotion
 promo_graph_count <- education_data %>% 
   mutate(years_bucket = cut(years_since_last_promotion,
                             breaks = c(0, 3, 6, 9, 12, 15),
@@ -250,6 +248,7 @@ promo_graph_count
 #### Graph displaying count above, graph displaying proportion below
 
 ```{r}
+#| label: Education proportion graph
 #| code-fold: true
 
 # Created table and graph to show the proportion of employees who attritted based on years since their last promotion
@@ -342,7 +341,7 @@ knitr::kable()
 We see that employees in the early stages of their career and have overtime are more likely to engage in attrition. However, I wanted to take it a step further by examining the satisfaction of these groups.
 
 ```{r}
-#| label: Analyses
+#| label: OT Analyses
 
 # Created a risk table to showcase the 5 groups with the highest attrition rates
 risk_table <- hr_features %>% 
@@ -363,11 +362,14 @@ overtime_graph <- ggplot(hr_features, aes(x = career_stage, fill = attrition)) +
              labeller = labeller(
                over_time = c("No" = "No Overtime", 
                              "Yes" = "Overtime")
-             )
-  ) + 
-  labs(title = "Attrition Patterns Across Career Stages and Overtime",
-       x = "Career Stage",
-       y = "Proportion") +
+               )
+             ) + 
+  labs(
+    title = "Attrition Patterns Across Career Stages and Overtime",
+    x = "Career Stage",
+    y = "Proportion",
+    fill = "Attrition"
+    ) +
   graph_theme +
   scale_fill_manual(values = c("No" = "grey80", "Yes" = "#D55E00"))
 
@@ -384,13 +386,14 @@ early_overtime_graph <- ggplot(early_career,
              labeller = labeller(
                over_time = c("No" = "No Overtime", 
                              "Yes" = "Overtime")
-             )
-  ) +
+               )
+             ) +
   labs(
     title = "Early Career Attrition: Effects of Satisfaction and Overtime",
     x = "Satisfaction",
-    y = "Proportion"
-  ) +
+    y = "Proportion",
+    fill = "Attrition"
+    ) +
   graph_theme +
   scale_fill_manual(values = c("No" = "grey80", "Yes" = "#D55E00"))
 
