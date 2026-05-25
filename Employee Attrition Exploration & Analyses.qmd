@@ -12,6 +12,14 @@ execute:
 editor: visual
 ---
 
+## Introduction
+
+The following document utilizes data from the [IBM HR Analytics Employee Attrition Dataset](https://www.kaggle.com/datasets/pavansubhasht/ibm-hr-analytics-attrition-dataset). The primary purpose was to highlight and summarize skills in R, primarily things such as exploratory data analysis, as well as data cleaning, manipulation, and visualization.
+
+This project also answers some brief questions regarding attrition and other metrics, while posing new areas for discussion.
+
+It is important to note that units are not specified in the dataset for variables such as distance and income. When applicable, factors were converted using explicit scales from the information provided.
+
 ## Setup
 
 ```{r}
@@ -38,7 +46,7 @@ hr_data <- read_csv("data/WA_Fn-UseC_-HR-Employee-Attrition.csv")
 glimpse(hr_data)
 ```
 
-# Cleaning
+## Cleaning
 
 ```{r}
 #| label: data cleaning
@@ -94,7 +102,9 @@ hr_eda <- hr_data %>%
   )
 ```
 
-# Analyses
+## Analyses
+
+For the analyses, I wanted to explore different avenues that may help us get a better understanding of where attrition was more likely to occur, in turn allowing us to highlight groups that were at a bigger risk.
 
 ```{r}
 #| label: Preparation for analyses
@@ -108,7 +118,11 @@ attrition_data <- hr_eda %>%
 
 ```
 
-## Engagement Insights
+### Engagement Insights
+
+Upon my initial glance at the data, the first question that caught my eye was about the relationship between job involvement and satisfaction, which I called "job engagement".
+
+\[Add more about why I chose these variables?\]
 
 ```{r}
 #| label: Job Involvement and Satisfaction graph
@@ -142,15 +156,15 @@ engagement_heatmap
 
 The heatmap shows that attrition rates are lowest at the extreme highs of job involvement and satisfaction. In fact, the rate for employees with both very high job involvement and satisfaction is `r min(engagement_df$attrition_rate)`%. As shown in the graphic, as these engagement levels decrease, attrition rates tend to increase.
 
-## Commute and Satisfaction
+### Commute and Satisfaction
 
-How does Commute influence Satisfaction?
+The following graphs outline the relationship between several factors: commute distance, satisfaction, and attrition.
 
-I took a snapshot into various insights of potential areas that may serve as some explanation to why employees engage in attrition. The following graphs outline the relationship between several factors: commute distance, satisfaction, and attrition. \[REWORD\]
+I decided to take a look into insights of potential areas that may serve as explanation to why employees engage in attrition.
 
-Created new feature, satisfaction_index... (Important to discuss because I use it later as well)
+To do so, I created a new feature, **satisfaction_index**, which took the average value (from a scale of 1 \[Low\] to 4 \[Very High\]) from all other satisfaction variables, including environment, job, and relationship satisfaction, as well as work life balance.
 
-\*Note that commute distance does not have a unit because the data set is not specific
+\*Note that commute distance does not have a unit because the data set is not specific.
 
 ```{r}
 #| label: Organizing Data
@@ -197,7 +211,7 @@ ggplot(hr_features, aes(distance_from_home, satisfaction_index)) +
 
 The graphs mentioned above show that satisfaction is lower and commute distance slightly higher for employees experiencing attrition, although there isn't a strong relationship between satisfaction and commute distance themselves.
 
-## Education Insights
+### Education Insights
 
 ```{r}
 # Created a new table to gain insight on employees based on their education level
@@ -280,7 +294,7 @@ promo_graph_prop <- promo_prop_df %>%
 promo_graph_prop
 ```
 
-## Early Career Burnout?
+### Early Career Burnout?
 
 Are younger/newer employees with overtime and lower satisfaction more likely to leave?
 
@@ -400,3 +414,5 @@ early_overtime_graph <- ggplot(early_career,
 
 early_overtime_graph
 ```
+
+## Concluding Thoughts

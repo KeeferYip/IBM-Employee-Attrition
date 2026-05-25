@@ -85,7 +85,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#setup" id="toc-setup" class="nav-link active" data-scroll-target="#setup">Setup</a>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#setup" id="toc-setup" class="nav-link" data-scroll-target="#setup">Setup</a>
   <ul class="collapse">
   <li><a href="#importing-data" id="toc-importing-data" class="nav-link" data-scroll-target="#importing-data">Importing Data</a></li>
   </ul></li>
@@ -97,6 +98,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#education-insights" id="toc-education-insights" class="nav-link" data-scroll-target="#education-insights">Education Insights</a></li>
   <li><a href="#early-career-burnout" id="toc-early-career-burnout" class="nav-link" data-scroll-target="#early-career-burnout">Early Career Burnout?</a></li>
   </ul></li>
+  <li><a href="#concluding-thoughts" id="toc-concluding-thoughts" class="nav-link" data-scroll-target="#concluding-thoughts">Concluding Thoughts</a></li>
   </ul>
 </nav>
 </div>
@@ -128,6 +130,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>The following document utilizes data from the <a href="https://www.kaggle.com/datasets/pavansubhasht/ibm-hr-analytics-attrition-dataset">IBM HR Analytics Employee Attrition Dataset</a>. The primary purpose was to highlight and summarize the skills I learned in R, primarily things such as exploratory data analysis, as well as data cleaning, manipulation, and visualization.</p>
+<p>This project also answers some brief questions regarding attrition and other metrics, while posing new areas for discussion.</p>
+<p>It is important to note that units are not specified in the dataset for variables such as distance and income. When applicable, factors were converted using explicit scales from the information provided.</p>
+</section>
 <section id="setup" class="level2">
 <h2 class="anchored" data-anchor-id="setup">Setup</h2>
 <div class="cell">
@@ -144,8 +152,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </section>
 </section>
-<section id="cleaning" class="level1">
-<h1>Cleaning</h1>
+<section id="cleaning" class="level2">
+<h2 class="anchored" data-anchor-id="cleaning">Cleaning</h2>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Standardized column names</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>hr_data <span class="ot">&lt;-</span> janitor<span class="sc">::</span><span class="fu">clean_names</span>(hr_data) <span class="sc">%&gt;%</span> </span>
@@ -199,8 +207,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="analyses" class="level1">
-<h1>Analyses</h1>
+<section id="analyses" class="level2">
+<h2 class="anchored" data-anchor-id="analyses">Analyses</h2>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Created a new table highlighting employees who attritted, selecting some specific variables</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>attrition_data <span class="ot">&lt;-</span> hr_eda <span class="sc">%&gt;%</span> </span>
@@ -209,8 +217,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>         job_involvement, job_level, job_satisfaction, </span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>         num_companies_worked<span class="sc">:</span><span class="fu">last_col</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<section id="engagement-insights" class="level2">
-<h2 class="anchored" data-anchor-id="engagement-insights">Engagement Insights</h2>
+<section id="engagement-insights" class="level3">
+<h3 class="anchored" data-anchor-id="engagement-insights">Engagement Insights</h3>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Created a new table to display the attrition rates of each job involvement and satisfaction pair</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>engagement_df <span class="ot">&lt;-</span> hr_eda <span class="sc">%&gt;%</span> </span>
@@ -247,8 +255,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>The heatmap shows that attrition rates are lowest at the extreme highs of job involvement and satisfaction. In fact, the rate for employees with both very high job involvement and satisfaction is 2.38%. As shown in the graphic, as these engagement levels decrease, attrition rates tend to increase.</p>
 </section>
-<section id="commute-and-satisfaction" class="level2">
-<h2 class="anchored" data-anchor-id="commute-and-satisfaction">Commute and Satisfaction</h2>
+<section id="commute-and-satisfaction" class="level3">
+<h3 class="anchored" data-anchor-id="commute-and-satisfaction">Commute and Satisfaction</h3>
 <p>How does Commute influence Satisfaction?</p>
 <p>I took a snapshot into various insights of potential areas that may serve as some explanation to why employees engage in attrition. The following graphs outline the relationship between several factors: commute distance, satisfaction, and attrition. [REWORD]</p>
 <p>Created new feature, satisfaction_index… (Important to discuss because I use it later as well)</p>
@@ -314,8 +322,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>The graphs mentioned above show that satisfaction is lower and commute distance slightly higher for employees experiencing attrition, although there isn’t a strong relationship between satisfaction and commute distance themselves.</p>
 </section>
-<section id="education-insights" class="level2">
-<h2 class="anchored" data-anchor-id="education-insights">Education Insights</h2>
+<section id="education-insights" class="level3">
+<h3 class="anchored" data-anchor-id="education-insights">Education Insights</h3>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Created a new table to gain insight on employees based on their education level</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>education_data <span class="ot">&lt;-</span> attrition_data <span class="sc">%&gt;%</span> </span>
@@ -539,8 +547,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </section>
 </section>
-<section id="early-career-burnout" class="level2">
-<h2 class="anchored" data-anchor-id="early-career-burnout">Early Career Burnout?</h2>
+<section id="early-career-burnout" class="level3">
+<h3 class="anchored" data-anchor-id="early-career-burnout">Early Career Burnout?</h3>
 <p>Are younger/newer employees with overtime and lower satisfaction more likely to leave?</p>
 <p>Multi-layered hypothesis:</p>
 <p>Early-career employees leave more.</p>
@@ -788,6 +796,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
+</section>
+<section id="concluding-thoughts" class="level2">
+<h2 class="anchored" data-anchor-id="concluding-thoughts">Concluding Thoughts</h2>
 </section>
 
 </main>
