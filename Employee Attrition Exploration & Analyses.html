@@ -132,7 +132,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>The following document utilizes data from the <a href="https://www.kaggle.com/datasets/pavansubhasht/ibm-hr-analytics-attrition-dataset">IBM HR Analytics Employee Attrition Dataset</a>. The primary purpose was to highlight and summarize the skills I learned in R, primarily things such as exploratory data analysis, as well as data cleaning, manipulation, and visualization.</p>
+<p>The following document utilizes data from the <a href="https://www.kaggle.com/datasets/pavansubhasht/ibm-hr-analytics-attrition-dataset">IBM HR Analytics Employee Attrition Dataset</a>. The primary purpose was to highlight and summarize skills in R, primarily things such as exploratory data analysis, as well as data cleaning, manipulation, and visualization.</p>
 <p>This project also answers some brief questions regarding attrition and other metrics, while posing new areas for discussion.</p>
 <p>It is important to note that units are not specified in the dataset for variables such as distance and income. When applicable, factors were converted using explicit scales from the information provided.</p>
 </section>
@@ -209,6 +209,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="analyses" class="level2">
 <h2 class="anchored" data-anchor-id="analyses">Analyses</h2>
+<p>For the analyses, I wanted to explore different avenues that may help us get a better understanding of where attrition was more likely to occur, in turn allowing us to highlight groups that were at a bigger risk.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Created a new table highlighting employees who attritted, selecting some specific variables</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>attrition_data <span class="ot">&lt;-</span> hr_eda <span class="sc">%&gt;%</span> </span>
@@ -219,6 +220,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <section id="engagement-insights" class="level3">
 <h3 class="anchored" data-anchor-id="engagement-insights">Engagement Insights</h3>
+<p>Upon my initial glance at the data, the first question that caught my eye was about the relationship between job involvement and satisfaction, which I called “job engagement”.</p>
+<p>[Add more about why I chose these variables?]</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Created a new table to display the attrition rates of each job involvement and satisfaction pair</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>engagement_df <span class="ot">&lt;-</span> hr_eda <span class="sc">%&gt;%</span> </span>
@@ -257,10 +260,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="commute-and-satisfaction" class="level3">
 <h3 class="anchored" data-anchor-id="commute-and-satisfaction">Commute and Satisfaction</h3>
-<p>How does Commute influence Satisfaction?</p>
-<p>I took a snapshot into various insights of potential areas that may serve as some explanation to why employees engage in attrition. The following graphs outline the relationship between several factors: commute distance, satisfaction, and attrition. [REWORD]</p>
-<p>Created new feature, satisfaction_index… (Important to discuss because I use it later as well)</p>
-<p>*Note that commute distance does not have a unit because the data set is not specific</p>
+<p>The following graphs outline the relationship between several factors: commute distance, satisfaction, and attrition.</p>
+<p>I decided to take a look into insights of potential areas that may serve as explanation to why employees engage in attrition.</p>
+<p>To do so, I created a new feature, <strong>satisfaction_index</strong>, which took the average value (from a scale of 1 [Low] to 4 [Very High]) of all other satisfaction variables, including environment, job, and relationship satisfaction, as well as work life balance.</p>
+<p>*Note that commute distance does not have a unit because the data set is not specific.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Engineered new feature, satisfaction_index that takes the average of the satisfaction variables</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>hr_features <span class="ot">&lt;-</span> hr_features <span class="sc">%&gt;%</span> </span>
@@ -324,6 +327,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="education-insights" class="level3">
 <h3 class="anchored" data-anchor-id="education-insights">Education Insights</h3>
+<p>Another question I wanted to examine was whether or not highly educated employees were leaving because they weren’t being promoted fast enough. The dataset divides all employees into five categories of education, from “Below College” to “Doctor”.</p>
+<p>The reasoning behind this was that people who pursue a higher degree of education are often ambitious people, and as such they would likely feel disdain from not being promoted in quick intervals.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Created a new table to gain insight on employees based on their education level</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>education_data <span class="ot">&lt;-</span> attrition_data <span class="sc">%&gt;%</span> </span>
@@ -373,6 +378,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>As seen, the education level with the highest rate of attrition was the employees who had a “Below College” level, with a rate of 18.24%. Conversely, the education level with the lowest rate of attrition was the employees with a “Doctor” level education, with a rate of 10.42%.</p>
 <section id="graph-of-breakdown-by-years-since-last-promotion" class="level4">
 <h4 class="anchored" data-anchor-id="graph-of-breakdown-by-years-since-last-promotion">Graph of Breakdown by Years Since Last Promotion</h4>
+<p>I created buckets based on when the employee was last promoted, with two graphs to display both the count and proportion of employees who experienced attrition.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Created graph showing employees who attritted based on years since their last promotion</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>promo_graph_count <span class="ot">&lt;-</span> education_data <span class="sc">%&gt;%</span> </span>
@@ -388,7 +394,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Breakdown of Attrition by Years Since Last Promotion"</span>, </span>
 <span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">"Education Level"</span>) <span class="sc">+</span></span>
 <span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  graph_theme <span class="sc">+</span></span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Blues"</span>)</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Accent"</span>)</span>
 <span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>      </span>
 <span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>promo_graph_count</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
@@ -400,8 +406,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="graph-displaying-count-above-graph-displaying-proportion-below" class="level4">
-<h4 class="anchored" data-anchor-id="graph-displaying-count-above-graph-displaying-proportion-below">Graph displaying count above, graph displaying proportion below</h4>
+<section id="proportion-graph" class="level4">
+<h4 class="anchored" data-anchor-id="proportion-graph">Proportion Graph</h4>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -411,11 +417,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>                            <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">6</span>, <span class="dv">9</span>, <span class="dv">12</span>, <span class="dv">15</span>),</span>
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>                            <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"0-3"</span>, <span class="st">"4-6"</span>, <span class="st">"7-9"</span>, <span class="st">"10-12"</span>, <span class="st">"13-15"</span>),</span>
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>                            <span class="at">include.lowest =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(years_bucket, education) </span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Table to display the breakdown into each bucket</span></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(promo_prop_df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(years_bucket, education) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <thead>
@@ -519,8 +536,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 </div>
-<details class="code-fold">
-<summary>Code</summary>
+</div>
+</div>
+</div>
+</div>
+<div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>promo_graph_prop <span class="ot">&lt;-</span> promo_prop_df <span class="sc">%&gt;%</span> </span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(years_bucket) <span class="sc">%&gt;%</span> </span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">prop =</span> n <span class="sc">/</span> <span class="fu">sum</span>(n)) <span class="sc">%&gt;%</span> </span>
@@ -533,18 +553,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Breakdown of Attrition by Years Since Last Promotion"</span>, </span>
 <span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">"Education Level"</span>) <span class="sc">+</span></span>
 <span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  graph_theme <span class="sc">+</span> </span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Blues"</span>)</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Accent"</span>)</span>
 <span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>      </span>
 <span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>promo_graph_prop</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Employee-Attrition-Exploration---Analyses_files/figure-html/Education%20proportion%20graph-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Employee-Attrition-Exploration---Analyses_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
+<p>From the graphs, we can see that most attrition occurs in the first bucket, when it has been 0-3 years since an employee’s last promotion. We can also see that attritted employees with doctor’s degrees did not stay longer than 4-6 years after their last promotion.</p>
 </section>
 </section>
 <section id="early-career-burnout" class="level3">
@@ -764,6 +784,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </figure>
 </div>
 </div>
+</div>
+<p>Now, we are only looking at the employees in the early stages of their career, as they are the group with the highest risk.</p>
+<div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Deeper dive into early career employees and their satisfaction</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>early_career <span class="ot">&lt;-</span> hr_features <span class="sc">%&gt;%</span> </span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(career_stage <span class="sc">==</span> <span class="st">"Early Career"</span>) </span>
@@ -790,7 +813,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Employee-Attrition-Exploration---Analyses_files/figure-html/OT%20Analyses-2.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Employee-Attrition-Exploration---Analyses_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>

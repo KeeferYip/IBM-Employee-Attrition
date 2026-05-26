@@ -162,7 +162,7 @@ The following graphs outline the relationship between several factors: commute d
 
 I decided to take a look into insights of potential areas that may serve as explanation to why employees engage in attrition.
 
-To do so, I created a new feature, **satisfaction_index**, which took the average value (from a scale of 1 \[Low\] to 4 \[Very High\]) from all other satisfaction variables, including environment, job, and relationship satisfaction, as well as work life balance.
+To do so, I created a new feature, **satisfaction_index**, which took the average value (from a scale of 1 \[Low\] to 4 \[Very High\]) of all other satisfaction variables, including environment, job, and relationship satisfaction, as well as work life balance.
 
 \*Note that commute distance does not have a unit because the data set is not specific.
 
@@ -213,6 +213,10 @@ The graphs mentioned above show that satisfaction is lower and commute distance 
 
 ### Education Insights
 
+Another question I wanted to examine was whether or not highly educated employees were leaving because they weren't being promoted fast enough. The dataset divides all employees into five categories of education, from "Below College" to "Doctor".
+
+The reasoning behind this was that people who pursue a higher degree of education are often ambitious people, and as such they would likely feel disdain from not being promoted in quick intervals.
+
 ```{r}
 # Created a new table to gain insight on employees based on their education level
 education_data <- attrition_data %>% 
@@ -238,6 +242,8 @@ range(hr_eda$years_since_last_promotion)
 
 #### Graph of Breakdown by Years Since Last Promotion
 
+I created buckets based on when the employee was last promoted, with two graphs to display both the count and proportion of employees who experienced attrition.
+
 ```{r}
 #| label: Education x Promotion Graphing
 
@@ -255,12 +261,12 @@ promo_graph_count <- education_data %>%
   labs(title = "Breakdown of Attrition by Years Since Last Promotion", 
        fill = "Education Level") +
   graph_theme +
-  scale_fill_brewer(palette = "Blues")
+  scale_fill_brewer(palette = "Accent")
       
 promo_graph_count
 ```
 
-#### Graph displaying count above, graph displaying proportion below
+#### Proportion Graph
 
 ```{r}
 #| label: Education proportion graph
@@ -274,9 +280,18 @@ promo_prop_df <- education_data %>%
                             include.lowest = TRUE)) %>%
   count(years_bucket, education) 
 
+```
+
+::: {.callout-note collapse="true"}
+```{r}
+#| echo: false
+
 # Table to display the breakdown into each bucket
 knitr::kable(promo_prop_df)
+```
+:::
 
+```{r}
 promo_graph_prop <- promo_prop_df %>% 
   group_by(years_bucket) %>% 
   mutate(prop = n / sum(n)) %>% 
@@ -289,10 +304,12 @@ promo_graph_prop <- promo_prop_df %>%
   labs(title = "Breakdown of Attrition by Years Since Last Promotion", 
        fill = "Education Level") +
   graph_theme + 
-  scale_fill_brewer(palette = "Blues")
+  scale_fill_brewer(palette = "Accent")
       
 promo_graph_prop
 ```
+
+From the graphs, we can see that most attrition occurs in the first bucket, when it has been 0-3 years since an employee's last promotion. We can also see that attritted employees with doctor's degrees did not stay longer than 4-6 years after their last promotion.
 
 ### Early Career Burnout?
 
@@ -389,7 +406,11 @@ overtime_graph <- ggplot(hr_features, aes(x = career_stage, fill = attrition)) +
   scale_fill_manual(values = c("No" = "grey80", "Yes" = "#D55E00"))
 
 overtime_graph
+```
 
+Next, we are only looking at the employees in the early stages of their career, as they are the group with the highest risk.
+
+```{r}
 # Deeper dive into early career employees and their satisfaction
 early_career <- hr_features %>% 
   filter(career_stage == "Early Career") 
