@@ -317,7 +317,7 @@ So far, most of the analyses haven't painted a clear picture on what may be corr
 
 Are newer employees with overtime and lower satisfaction more likely to leave?
 
-\*In the following analyses, "new employees" refers to employees with short tenure.
+\*In the following analyses, the terms"new/newer employees" are used interchangeably with short-tenure.
 
 For this question, I developed a multi-layered hypothesis:
 
@@ -427,6 +427,8 @@ overtime_graph <- ggplot(hr_features, aes(x = tenure, fill = attrition)) +
 
 overtime_graph
 ```
+
+The chart shows that in both groups (Overtime vs No Overtime), short-tenured employees have the highest attrition rates. Furthermore, overtime tends to display a pattern of higher attrition across all groups.
 
 Next, we are only looking at the employees in the early stages of their tenure, as they are the group with the highest risk.
 
