@@ -311,37 +311,57 @@ promo_graph_prop
 
 From the graphs, we can see that most attrition occurs in the first bucket, when it has been 0-3 years since an employee's last promotion. We can also see that attritted employees with doctor's degrees did not stay longer than 4-6 years after their last promotion.
 
-### Early Career Burnout?
+### Early Burnout?
 
-Are younger/newer employees with overtime and lower satisfaction more likely to leave?
+So far, most of the analyses haven't painted a clear picture on what may be correlated with attrition. The final dynamic I wanted to examine was the effects of overtime on employees, specifically:
 
-Multi-layered hypothesis:
+Are newer employees with overtime and lower satisfaction more likely to leave?
 
-Early-career employees leave more.
+\*In the following analyses, "new employees" refers to employees with short tenure.
 
-Overtime increases attrition.
+For this question, I developed a multi-layered hypothesis:
 
-Low satisfaction and overtime lead to extreme attrition.
+- Newer employees are more likely to leave than longer-tenured employees
+
+- Overtime increases attrition.
+
+- Low satisfaction and overtime lead to extreme attrition.
+
+Tenure groups are defined as:
+
+"Short-tenure": ≤ 2 years
+
+"Mid-tenure" = 3–7 years
+
+Long-tenure: ≥ 8 years
+
+Satisfaction groups are defined as:
+
+Low: ≤ 2
+
+Medium: \> 2 and ≤ 3
+
+High: \> 3
 
 ```{r}
 #| label: EDA before analyses and graphs
 
-# Created segments for employee career stages and satisfaction 
+# Created segments for employee tenure and satisfaction 
 hr_features <- hr_features %>% 
   mutate(
-    career_stage = case_when(
-      years_at_company <= 2 ~ "Early Career",
-      years_at_company <= 7 ~ "Mid Career",
-      TRUE ~ "Established"),
+    tenure = case_when(
+      years_at_company <= 2 ~ "Short-tenure",
+      years_at_company <= 7 ~ "Mid-tenure",
+      TRUE ~ "Long-tenure"),
     satisfaction_group = case_when(
       satisfaction_index <= 2 ~ "Low",
       satisfaction_index <= 3 ~ "Medium",
       TRUE ~ "High"
     ),
     # Turn segments into ordered factors
-    career_stage = factor(
-      career_stage, 
-      levels = c("Early Career", "Mid Career", "Established")
+    tenure = factor(
+      tenure, 
+      levels = c("Short-tenure", "Mid-tenure", "Long-tenure")
     ),
     satisfaction_group = factor(
       satisfaction_group, 
@@ -349,9 +369,9 @@ hr_features <- hr_features %>%
     )
   )
 
-# Examining the attrition rate across career stages
+# Examining the attrition rate across tenure groups
 hr_features %>% 
-  group_by(career_stage) %>% 
+  group_by(tenure) %>% 
   summarize(
     n = n(),
     attrition_rate = round((mean(attrition == "Yes")) * 100, 2) 
@@ -359,9 +379,9 @@ hr_features %>%
   arrange(desc(attrition_rate)) %>% 
 knitr::kable()
 
-# Examining attrition rate across career stages and OT
+# Examining attrition rate across tenure groups and OT
 hr_features %>% 
-  group_by(career_stage, over_time) %>% 
+  group_by(tenure, over_time) %>% 
   summarize(
     n = n(),
     attrition_rate = round((mean(attrition == "Yes")) * 100, 2)
@@ -370,14 +390,14 @@ hr_features %>%
 knitr::kable()
 ```
 
-We see that employees in the early stages of their career and have overtime are more likely to engage in attrition. However, I wanted to take it a step further by examining the satisfaction of these groups.
+We see that newer employees that have overtime are more likely to engage in attrition. However, I wanted to take it a step further by examining the satisfaction of these groups.
 
 ```{r}
 #| label: OT Analyses
 
 # Created a risk table to showcase the 5 groups with the highest attrition rates
 risk_table <- hr_features %>% 
-  group_by(career_stage, over_time, satisfaction_group) %>% 
+  group_by(tenure, over_time, satisfaction_group) %>% 
   summarize(
     n = n(), 
     attrition_rate = round((mean(attrition == "Yes")) * 100, 2)
@@ -387,8 +407,8 @@ risk_table <- hr_features %>%
 
 knitr::kable(risk_table)
 
-# Create a graph to display effects of overtime on different career stages
-overtime_graph <- ggplot(hr_features, aes(x = career_stage, fill = attrition)) +
+# Create a graph to display effects of overtime on different tenure groups
+overtime_graph <- ggplot(hr_features, aes(x = tenure, fill = attrition)) +
   geom_bar(position = "fill") +
   facet_grid(~ over_time, 
              labeller = labeller(
@@ -397,8 +417,8 @@ overtime_graph <- ggplot(hr_features, aes(x = career_stage, fill = attrition)) +
                )
              ) + 
   labs(
-    title = "Attrition Patterns Across Career Stages and Overtime",
-    x = "Career Stage",
+    title = "Attrition Patterns Across Tenure Groups and Overtime",
+    x = "Tenure Group",
     y = "Proportion",
     fill = "Attrition"
     ) +
@@ -408,14 +428,14 @@ overtime_graph <- ggplot(hr_features, aes(x = career_stage, fill = attrition)) +
 overtime_graph
 ```
 
-Next, we are only looking at the employees in the early stages of their career, as they are the group with the highest risk.
+Next, we are only looking at the employees in the early stages of their tenure, as they are the group with the highest risk.
 
 ```{r}
-# Deeper dive into early career employees and their satisfaction
-early_career <- hr_features %>% 
-  filter(career_stage == "Early Career") 
+# Deeper dive into new employees and their satisfaction
+new_employees <- hr_features %>% 
+  filter(tenure == "Short-tenure") 
 
-early_overtime_graph <- ggplot(early_career, 
+new_overtime_graph <- ggplot(new_employees, 
                                aes(x = satisfaction_group, fill = attrition)) +
   geom_bar(position = "fill") +
   facet_wrap(~ over_time, 
@@ -425,7 +445,7 @@ early_overtime_graph <- ggplot(early_career,
                )
              ) +
   labs(
-    title = "Early Career Attrition: Effects of Satisfaction and Overtime",
+    title = "New Employee Attrition: Effects of Satisfaction and Overtime",
     x = "Satisfaction",
     y = "Proportion",
     fill = "Attrition"
@@ -433,7 +453,7 @@ early_overtime_graph <- ggplot(early_career,
   graph_theme +
   scale_fill_manual(values = c("No" = "grey80", "Yes" = "#D55E00"))
 
-early_overtime_graph
+new_overtime_graph
 ```
 
 ## Concluding Thoughts
