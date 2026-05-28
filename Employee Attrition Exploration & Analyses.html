@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.36">
+<meta name="generator" content="quarto-1.9.37">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -69,10 +69,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="Employee Attrition Exploration &amp; Analyses_files/libs/quarto-html/tippy.umd.min.js"></script>
 <script src="Employee Attrition Exploration &amp; Analyses_files/libs/quarto-html/anchor.min.js"></script>
 <link href="Employee Attrition Exploration &amp; Analyses_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="Employee Attrition Exploration &amp; Analyses_files/libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="Employee Attrition Exploration &amp; Analyses_files/libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="Employee Attrition Exploration &amp; Analyses_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="Employee Attrition Exploration &amp; Analyses_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="Employee Attrition Exploration &amp; Analyses_files/libs/bootstrap/bootstrap-d359420eca839bd29160a783b9e344c9.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="Employee Attrition Exploration &amp; Analyses_files/libs/bootstrap/bootstrap-6324ba2a6c15dd553a683532559c618d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 
 
 </head>
@@ -96,7 +96,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#engagement-insights" id="toc-engagement-insights" class="nav-link" data-scroll-target="#engagement-insights">Engagement Insights</a></li>
   <li><a href="#commute-and-satisfaction" id="toc-commute-and-satisfaction" class="nav-link" data-scroll-target="#commute-and-satisfaction">Commute and Satisfaction</a></li>
   <li><a href="#education-insights" id="toc-education-insights" class="nav-link" data-scroll-target="#education-insights">Education Insights</a></li>
-  <li><a href="#early-career-burnout" id="toc-early-career-burnout" class="nav-link" data-scroll-target="#early-career-burnout">Early Career Burnout?</a></li>
+  <li><a href="#early-burnout" id="toc-early-burnout" class="nav-link" data-scroll-target="#early-burnout">Early Burnout?</a></li>
   </ul></li>
   <li><a href="#concluding-thoughts" id="toc-concluding-thoughts" class="nav-link" data-scroll-target="#concluding-thoughts">Concluding Thoughts</a></li>
   </ul>
@@ -567,30 +567,42 @@ Note
 <p>From the graphs, we can see that most attrition occurs in the first bucket, when it has been 0-3 years since an employee’s last promotion. We can also see that attritted employees with doctor’s degrees did not stay longer than 4-6 years after their last promotion.</p>
 </section>
 </section>
-<section id="early-career-burnout" class="level3">
-<h3 class="anchored" data-anchor-id="early-career-burnout">Early Career Burnout?</h3>
-<p>Are younger/newer employees with overtime and lower satisfaction more likely to leave?</p>
-<p>Multi-layered hypothesis:</p>
-<p>Early-career employees leave more.</p>
-<p>Overtime increases attrition.</p>
-<p>Low satisfaction and overtime lead to extreme attrition.</p>
+<section id="early-burnout" class="level3">
+<h3 class="anchored" data-anchor-id="early-burnout">Early Burnout?</h3>
+<p>So far, most of the analyses haven’t painted a clear picture on what may be correlated with attrition. The final dynamic I wanted to examine was the effects of overtime on employees, specifically:</p>
+<p>Are newer employees with overtime and lower satisfaction more likely to leave?</p>
+<p>*In the following analyses, the terms”new/newer employees” are used interchangeably with short-tenure.</p>
+<p>For this question, I developed a multi-layered hypothesis:</p>
+<ul>
+<li><p>Newer employees are more likely to leave than longer-tenured employees</p></li>
+<li><p>Overtime increases attrition.</p></li>
+<li><p>Low satisfaction and overtime lead to extreme attrition.</p></li>
+</ul>
+<p>Tenure groups are defined as:</p>
+<p>Short-tenure: ≤ 2 years</p>
+<p>Mid-tenure: 3–7 years</p>
+<p>Long-tenure: 8 years</p>
+<p>Satisfaction groups (relative to their satisfaction index scores) are defined as:</p>
+<p>Low: ≤ 2</p>
+<p>Medium: &gt; 2 and ≤ 3</p>
+<p>High: &gt; 3</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Created segments for employee career stages and satisfaction </span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Created segments for employee tenure and satisfaction </span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>hr_features <span class="ot">&lt;-</span> hr_features <span class="sc">%&gt;%</span> </span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">career_stage =</span> <span class="fu">case_when</span>(</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>      years_at_company <span class="sc">&lt;=</span> <span class="dv">2</span> <span class="sc">~</span> <span class="st">"Early Career"</span>,</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>      years_at_company <span class="sc">&lt;=</span> <span class="dv">7</span> <span class="sc">~</span> <span class="st">"Mid Career"</span>,</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"Established"</span>),</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">tenure =</span> <span class="fu">case_when</span>(</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>      years_at_company <span class="sc">&lt;=</span> <span class="dv">2</span> <span class="sc">~</span> <span class="st">"Short-tenure"</span>,</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>      years_at_company <span class="sc">&lt;=</span> <span class="dv">7</span> <span class="sc">~</span> <span class="st">"Mid-tenure"</span>,</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"Long-tenure"</span>),</span>
 <span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">satisfaction_group =</span> <span class="fu">case_when</span>(</span>
 <span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>      satisfaction_index <span class="sc">&lt;=</span> <span class="dv">2</span> <span class="sc">~</span> <span class="st">"Low"</span>,</span>
 <span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>      satisfaction_index <span class="sc">&lt;=</span> <span class="dv">3</span> <span class="sc">~</span> <span class="st">"Medium"</span>,</span>
 <span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"High"</span></span>
 <span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    ),</span>
 <span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Turn segments into ordered factors</span></span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">career_stage =</span> <span class="fu">factor</span>(</span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>      career_stage, </span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>      <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Early Career"</span>, <span class="st">"Mid Career"</span>, <span class="st">"Established"</span>)</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">tenure =</span> <span class="fu">factor</span>(</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>      tenure, </span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>      <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Short-tenure"</span>, <span class="st">"Mid-tenure"</span>, <span class="st">"Long-tenure"</span>)</span>
 <span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>    ),</span>
 <span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">satisfaction_group =</span> <span class="fu">factor</span>(</span>
 <span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>      satisfaction_group, </span>
@@ -598,9 +610,9 @@ Note
 <span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Examining the attrition rate across career stages</span></span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Examining the attrition rate across tenure groups</span></span>
 <span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>hr_features <span class="sc">%&gt;%</span> </span>
-<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(career_stage) <span class="sc">%&gt;%</span> </span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(tenure) <span class="sc">%&gt;%</span> </span>
 <span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
 <span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>(),</span>
 <span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">attrition_rate =</span> <span class="fu">round</span>((<span class="fu">mean</span>(attrition <span class="sc">==</span> <span class="st">"Yes"</span>)) <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">2</span>) </span>
@@ -611,33 +623,36 @@ Note
 <table class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th style="text-align: left;">career_stage</th>
+<th style="text-align: left;">tenure</th>
 <th style="text-align: right;">n</th>
 <th style="text-align: right;">attrition_rate</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">Early Career</td>
+<td style="text-align: left;">Short-tenure</td>
 <td style="text-align: right;">342</td>
 <td style="text-align: right;">29.82</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Mid Career</td>
+<td style="text-align: left;">Mid-tenure</td>
 <td style="text-align: right;">600</td>
 <td style="text-align: right;">13.33</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">Established</td>
+<td style="text-align: left;">Long-tenure</td>
 <td style="text-align: right;">528</td>
 <td style="text-align: right;">10.42</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Examining attrition rate across career stages and OT</span></span>
+</div>
+<p>This first table shows us that short-tenured employees have a much higher attrition rate relative to all other employees. With a rate of 29.82%, short-tenured employees were more than twice as likely to leave compared to their mid and long-tenured counterparts.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Examining attrition rate across tenure groups and OT</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>hr_features <span class="sc">%&gt;%</span> </span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(career_stage, over_time) <span class="sc">%&gt;%</span> </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(tenure, over_time) <span class="sc">%&gt;%</span> </span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
 <span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>(),</span>
 <span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">attrition_rate =</span> <span class="fu">round</span>((<span class="fu">mean</span>(attrition <span class="sc">==</span> <span class="st">"Yes"</span>)) <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">2</span>)</span>
@@ -648,7 +663,7 @@ Note
 <table class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th style="text-align: left;">career_stage</th>
+<th style="text-align: left;">tenure</th>
 <th style="text-align: left;">over_time</th>
 <th style="text-align: right;">n</th>
 <th style="text-align: right;">attrition_rate</th>
@@ -656,37 +671,37 @@ Note
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">Early Career</td>
+<td style="text-align: left;">Short-tenure</td>
 <td style="text-align: left;">Yes</td>
 <td style="text-align: right;">104</td>
 <td style="text-align: right;">50.96</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Mid Career</td>
+<td style="text-align: left;">Mid-tenure</td>
 <td style="text-align: left;">Yes</td>
 <td style="text-align: right;">172</td>
 <td style="text-align: right;">28.49</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">Early Career</td>
+<td style="text-align: left;">Short-tenure</td>
 <td style="text-align: left;">No</td>
 <td style="text-align: right;">238</td>
 <td style="text-align: right;">20.59</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Established</td>
+<td style="text-align: left;">Long-tenure</td>
 <td style="text-align: left;">Yes</td>
 <td style="text-align: right;">140</td>
 <td style="text-align: right;">17.86</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">Established</td>
+<td style="text-align: left;">Long-tenure</td>
 <td style="text-align: left;">No</td>
 <td style="text-align: right;">388</td>
 <td style="text-align: right;">7.73</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Mid Career</td>
+<td style="text-align: left;">Mid-tenure</td>
 <td style="text-align: left;">No</td>
 <td style="text-align: right;">428</td>
 <td style="text-align: right;">7.24</td>
@@ -695,11 +710,13 @@ Note
 </table>
 </div>
 </div>
-<p>We see that employees in the early stages of their career and have overtime are more likely to engage in attrition. However, I wanted to take it a step further by examining the satisfaction of these groups.</p>
+<p>Now, by introducing overtime into the equation, we see that newer employees with overtime are again much more likely to engage in attrition. In fact, more than half of all short-tenured employees with overtime experienced attrition within the organization.</p>
+<p>Across all tenure groups, employees working overtime exhibited higher attrition rates than their non-overtime colleagues, suggesting that overtime is consistently associated with an increased likelihood of attrition.</p>
+<p>I wanted to gain more insight on why this may be, so I took a deeper dive into the satisfaction of all aforementioned groups.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Created a risk table to showcase the 5 groups with the highest attrition rates</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>risk_table <span class="ot">&lt;-</span> hr_features <span class="sc">%&gt;%</span> </span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(career_stage, over_time, satisfaction_group) <span class="sc">%&gt;%</span> </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(tenure, over_time, satisfaction_group) <span class="sc">%&gt;%</span> </span>
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
 <span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>(), </span>
 <span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">attrition_rate =</span> <span class="fu">round</span>((<span class="fu">mean</span>(attrition <span class="sc">==</span> <span class="st">"Yes"</span>)) <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">2</span>)</span>
@@ -712,7 +729,7 @@ Note
 <table class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th style="text-align: left;">career_stage</th>
+<th style="text-align: left;">tenure</th>
 <th style="text-align: left;">over_time</th>
 <th style="text-align: left;">satisfaction_group</th>
 <th style="text-align: right;">n</th>
@@ -721,35 +738,35 @@ Note
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">Early Career</td>
+<td style="text-align: left;">Short-tenure</td>
 <td style="text-align: left;">Yes</td>
 <td style="text-align: left;">Low</td>
 <td style="text-align: right;">11</td>
 <td style="text-align: right;">63.64</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Early Career</td>
+<td style="text-align: left;">Short-tenure</td>
 <td style="text-align: left;">No</td>
 <td style="text-align: left;">Low</td>
 <td style="text-align: right;">29</td>
 <td style="text-align: right;">55.17</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">Early Career</td>
+<td style="text-align: left;">Short-tenure</td>
 <td style="text-align: left;">Yes</td>
 <td style="text-align: left;">Medium</td>
 <td style="text-align: right;">61</td>
 <td style="text-align: right;">54.10</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Mid Career</td>
+<td style="text-align: left;">Mid-tenure</td>
 <td style="text-align: left;">Yes</td>
 <td style="text-align: left;">Low</td>
 <td style="text-align: right;">15</td>
 <td style="text-align: right;">53.33</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">Early Career</td>
+<td style="text-align: left;">Short-tenure</td>
 <td style="text-align: left;">Yes</td>
 <td style="text-align: left;">High</td>
 <td style="text-align: right;">32</td>
@@ -758,8 +775,12 @@ Note
 </tbody>
 </table>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a graph to display effects of overtime on different career stages</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>overtime_graph <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(hr_features, <span class="fu">aes</span>(<span class="at">x =</span> career_stage, <span class="at">fill =</span> attrition)) <span class="sc">+</span></span>
+</div>
+<p>This table outlines the top five segments of employees with the highest attrition rates, i.e.&nbsp;those most at risk for attrition. As expected, newer employees comprised four of the five highest rates, with most being in the “Low” satisfaction group.</p>
+<p>Overall, the results suggest an interaction between tenure, overtime, and satisfaction. The highest attrition rate was a dangerous 63.64%, where short tenure, overtime, and low satisfaction were observed.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a graph to display effects of overtime on different tenure groups</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>overtime_graph <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(hr_features, <span class="fu">aes</span>(<span class="at">x =</span> tenure, <span class="at">fill =</span> attrition)) <span class="sc">+</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"fill"</span>) <span class="sc">+</span></span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(<span class="sc">~</span> over_time, </span>
 <span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">labeller =</span> <span class="fu">labeller</span>(</span>
@@ -768,8 +789,8 @@ Note
 <span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>               )</span>
 <span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>             ) <span class="sc">+</span> </span>
 <span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Attrition Patterns Across Career Stages and Overtime"</span>,</span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Career Stage"</span>,</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Attrition Patterns Across Tenure Groups and Overtime"</span>,</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Tenure Group"</span>,</span>
 <span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Proportion"</span>,</span>
 <span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Attrition"</span></span>
 <span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
@@ -780,18 +801,19 @@ Note
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Employee-Attrition-Exploration---Analyses_files/figure-html/OT%20Analyses-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Employee-Attrition-Exploration---Analyses_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>Now, we are only looking at the employees in the early stages of their career, as they are the group with the highest risk.</p>
+<p>The chart shows that in both groups (Overtime vs No Overtime), short-tenured employees have the highest attrition rates. Furthermore, overtime tends to display a pattern of higher attrition across all groups.</p>
+<p>Next, we are only looking at the employees in the early stages of their tenure, as they are the group with the highest risk.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Deeper dive into early career employees and their satisfaction</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>early_career <span class="ot">&lt;-</span> hr_features <span class="sc">%&gt;%</span> </span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(career_stage <span class="sc">==</span> <span class="st">"Early Career"</span>) </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Deeper dive into new employees and their satisfaction</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>new_employees <span class="ot">&lt;-</span> hr_features <span class="sc">%&gt;%</span> </span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(tenure <span class="sc">==</span> <span class="st">"Short-tenure"</span>) </span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>early_overtime_graph <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(early_career, </span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>new_overtime_graph <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(new_employees, </span>
 <span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>                               <span class="fu">aes</span>(<span class="at">x =</span> satisfaction_group, <span class="at">fill =</span> attrition)) <span class="sc">+</span></span>
 <span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"fill"</span>) <span class="sc">+</span></span>
 <span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> over_time, </span>
@@ -801,7 +823,7 @@ Note
 <span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>               )</span>
 <span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>             ) <span class="sc">+</span></span>
 <span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Early Career Attrition: Effects of Satisfaction and Overtime"</span>,</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"New Employee Attrition: Effects of Satisfaction and Overtime"</span>,</span>
 <span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Satisfaction"</span>,</span>
 <span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Proportion"</span>,</span>
 <span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Attrition"</span></span>
@@ -809,11 +831,11 @@ Note
 <span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>  graph_theme <span class="sc">+</span></span>
 <span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"No"</span> <span class="ot">=</span> <span class="st">"grey80"</span>, <span class="st">"Yes"</span> <span class="ot">=</span> <span class="st">"#D55E00"</span>))</span>
 <span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>early_overtime_graph</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>new_overtime_graph</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Employee-Attrition-Exploration---Analyses_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Employee-Attrition-Exploration---Analyses_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>

@@ -329,13 +329,13 @@ For this question, I developed a multi-layered hypothesis:
 
 Tenure groups are defined as:
 
-"Short-tenure": ≤ 2 years
+Short-tenure: ≤ 2 years
 
-"Mid-tenure" = 3–7 years
+Mid-tenure: 3–7 years
 
-Long-tenure: ≥ 8 years
+Long-tenure: 8 years
 
-Satisfaction groups are defined as:
+Satisfaction groups (relative to their satisfaction index scores) are defined as:
 
 Low: ≤ 2
 
@@ -379,6 +379,12 @@ hr_features %>%
   arrange(desc(attrition_rate)) %>% 
 knitr::kable()
 
+```
+
+This first table shows us that short-tenured employees have a much higher attrition rate relative to all other employees. With a rate of 29.82%, short-tenured employees were more than twice as likely to leave compared to their mid and long-tenured counterparts.
+
+```{r}
+
 # Examining attrition rate across tenure groups and OT
 hr_features %>% 
   group_by(tenure, over_time) %>% 
@@ -390,7 +396,11 @@ hr_features %>%
 knitr::kable()
 ```
 
-We see that newer employees that have overtime are more likely to engage in attrition. However, I wanted to take it a step further by examining the satisfaction of these groups.
+Now, by introducing overtime into the equation, we see that newer employees with overtime are again much more likely to engage in attrition. In fact, more than half of all short-tenured employees with overtime experienced attrition within the organization.
+
+Across all tenure groups, employees working overtime exhibited higher attrition rates than their non-overtime colleagues, suggesting that overtime is consistently associated with an increased likelihood of attrition.
+
+I wanted to gain more insight on why this may be, so I took a deeper dive into the satisfaction of all aforementioned groups.
 
 ```{r}
 #| label: OT Analyses
@@ -407,6 +417,13 @@ risk_table <- hr_features %>%
 
 knitr::kable(risk_table)
 
+```
+
+This table outlines the top five segments of employees with the highest attrition rates, i.e. those most at risk for attrition. As expected, newer employees comprised four of the five highest rates, with most being in the "Low" satisfaction group.
+
+Overall, the results suggest an interaction between tenure, overtime, and satisfaction. The highest attrition rate was a dangerous `r max(risk_table$attrition_rate)`%, where short tenure, overtime, and low satisfaction were observed.
+
+```{r}
 # Create a graph to display effects of overtime on different tenure groups
 overtime_graph <- ggplot(hr_features, aes(x = tenure, fill = attrition)) +
   geom_bar(position = "fill") +
@@ -457,5 +474,7 @@ new_overtime_graph <- ggplot(new_employees,
 
 new_overtime_graph
 ```
+
+Again, the graph clearly shows that overtime plays a role in increasing attrition rates, but even more so for newer employees with medium and high satisfaction.
 
 ## Concluding Thoughts
