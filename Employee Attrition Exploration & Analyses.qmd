@@ -18,7 +18,21 @@ The following document utilizes data from the [IBM HR Analytics Employee Attriti
 
 This project also answers some brief questions regarding attrition and other metrics, while posing new areas for discussion.
 
+Several variables are analyzed to uncover the story of why this organization may be facing disproportionate rates of attrition, and while not comprehensive, recommendations are included at the end of the document for future steps.
+
 It is important to note that units are not specified in the dataset for variables such as distance and income. When applicable, factors were converted using explicit scales from the information provided.
+
+## Business Question
+
+This analysis aims to answer questions regarding employee attrition within an organization.
+
+Although the specific kinds are not explicitly outlined in this mock dataset, attrition is defined as the gradual workforce reduction through employee retirements, resignations, deaths or elimination of positions without immediately filling vacancies (Society for Human Resource Management, 2024).
+
+**Why Should Organizations Care About Attrition?**
+
+In terms of upfront cost, U.S. companies have spent almost a trillion dollars to replace employees who quit in 2023, according to the Work Institute’s 2024 Retention Report.
+
+That alone should scare many organizations into prioritizing retention, while also learning about the underlying factors at play with their company's attrition.
 
 ## Setup
 
@@ -480,3 +494,15 @@ new_overtime_graph
 Again, the graph clearly shows that overtime plays a role in increasing attrition rates, but even more so for newer employees with medium and high satisfaction.
 
 ## Concluding Thoughts
+
+### Limitations
+
+### Recommendations
+
+### References
+
+IBM. (n.d.). *IBM HR analytics employee attrition & performance dataset*. Kaggle. <https://www.kaggle.com/datasets/pavansubhasht/ibm-hr-analytics-attrition-dataset>
+
+Ruehl, E. (2024, April 15). *Attrition: Definition, types, causes & mitigation tips*. Society for Human Resource Management. [https://www.shrm.org/topics-tools/news/employee-relations/attrition-definition-types-causes-mitigation-tips](https://www.shrm.org/topics-tools/news/employee-relations/attrition-definition-types-causes-mitigation-tips?utm_source=chatgpt.com)
+
+Work Institute. (2024). *2024 retention report: Decoding the emerging workforce to accelerate retention, engagement, and profits*. [https://info.workinstitute.com/hubfs/2024%20Retention%20Report/Work%20Institute%202024%20Retention%20Report.pdf](https://info.workinstitute.com/hubfs/2024%20Retention%20Report/Work%20Institute%202024%20Retention%20Report.pdf?utm_source=chatgpt.com)
