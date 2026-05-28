@@ -109,7 +109,7 @@ For the analyses, I wanted to explore different avenues that may help us get a b
 ```{r}
 #| label: Preparation for analyses
 
-# Created a new table highlighting employees who attritted, selecting some specific variables
+# Created a new table highlighting employees who left, selecting some specific variables
 attrition_data <- hr_eda %>% 
   filter(attrition == "Yes") %>% 
   select(employee_number, distance_from_home, education, environment_satisfaction, 
@@ -120,9 +120,11 @@ attrition_data <- hr_eda %>%
 
 ### Engagement Insights
 
-Upon my initial glance at the data, the first question that caught my eye was about the relationship between job involvement and satisfaction, which I called "job engagement".
+Upon my initial glance at the data, the first question that caught my eye was about the relationship between job involvement and satisfaction, which I defined as "job engagement".
 
-\[Add more about why I chose these variables?\]
+I picked these variables because they are commonly associated with employee attrition and represent two complementary dimensions of an employee's experience.
+
+Here, I created a heatmap to highlight the relationship these two factors had with attrition rates.
 
 ```{r}
 #| label: Job Involvement and Satisfaction graph
@@ -154,7 +156,7 @@ engagement_heatmap <- ggplot(engagement_df) +
 engagement_heatmap
 ```
 
-The heatmap shows that attrition rates are lowest at the extreme highs of job involvement and satisfaction. In fact, the rate for employees with both very high job involvement and satisfaction is `r min(engagement_df$attrition_rate)`%. As shown in the graphic, as these engagement levels decrease, attrition rates tend to increase.
+The heatmap shows that attrition rates are lowest at the extreme highs of job involvement and satisfaction. Notably, the rate for employees with both very high job involvement and satisfaction is `r min(engagement_df$attrition_rate)`%. As shown in the graphic, as these engagement levels decrease, attrition rates tend to increase.
 
 ### Commute and Satisfaction
 
@@ -209,7 +211,7 @@ ggplot(hr_features, aes(distance_from_home, satisfaction_index)) +
   graph_theme
 ```
 
-The graphs mentioned above show that satisfaction is lower and commute distance slightly higher for employees experiencing attrition, although there isn't a strong relationship between satisfaction and commute distance themselves.
+The graphs show that satisfaction is lower and commute distance slightly higher for employees experiencing attrition, although there isn't a strong relationship between satisfaction and commute distance themselves.
 
 ### Education Insights
 
@@ -247,7 +249,7 @@ I created buckets based on when the employee was last promoted, with two graphs 
 ```{r}
 #| label: Education x Promotion Graphing
 
-# Created graph showing employees who attritted based on years since their last promotion
+# Created graph showing employees who left based on years since their last promotion
 promo_graph_count <- education_data %>% 
   mutate(years_bucket = cut(years_since_last_promotion,
                             breaks = c(0, 3, 6, 9, 12, 15),
@@ -272,7 +274,7 @@ promo_graph_count
 #| label: Education proportion graph
 #| code-fold: true
 
-# Created table and graph to show the proportion of employees who attritted based on years since their last promotion
+# Created table and graph to show the proportion of employees who left based on years since their last promotion
 promo_prop_df <- education_data %>% 
   mutate(years_bucket = cut(years_since_last_promotion,
                             breaks = c(0, 3, 6, 9, 12, 15),
@@ -309,11 +311,11 @@ promo_graph_prop <- promo_prop_df %>%
 promo_graph_prop
 ```
 
-From the graphs, we can see that most attrition occurs in the first bucket, when it has been 0-3 years since an employee's last promotion. We can also see that attritted employees with doctor's degrees did not stay longer than 4-6 years after their last promotion.
+From the graphs, we can see that most attrition occurs in the first bucket, when it has been 0-3 years since an employee's last promotion. We can also see that employees with doctor's degrees who experienced attrition did not stay longer than 4-6 years after their last promotion.
 
 ### Early Burnout?
 
-So far, most of the analyses haven't painted a clear picture on what may be correlated with attrition. The final dynamic I wanted to examine was the effects of overtime on employees, specifically:
+So far, the analyses haven't painted a clear picture on what may be correlated with attrition. The final dynamic I wanted to examine was the effects of overtime on employees, specifically:
 
 Are newer employees with overtime and lower satisfaction more likely to leave?
 
@@ -419,7 +421,7 @@ knitr::kable(risk_table)
 
 ```
 
-This table outlines the top five segments of employees with the highest attrition rates, i.e. those most at risk for attrition. As expected, newer employees comprised four of the five highest rates, with most being in the "Low" satisfaction group.
+This table outlines the top five segments of employees with the highest attrition rates—those most at risk for attrition. As expected, newer employees comprised four of the five highest rates, with most being in the "Low" satisfaction group.
 
 Overall, the results suggest an interaction between tenure, overtime, and satisfaction. The highest attrition rate was a dangerous `r max(risk_table$attrition_rate)`%, where short tenure, overtime, and low satisfaction were observed.
 
