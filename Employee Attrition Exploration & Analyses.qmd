@@ -14,11 +14,11 @@ editor: visual
 
 ## Introduction
 
-The following document utilizes data from the [IBM HR Analytics Employee Attrition Dataset](https://www.kaggle.com/datasets/pavansubhasht/ibm-hr-analytics-attrition-dataset). The primary purpose was to highlight and summarize skills in R, primarily things such as exploratory data analysis, as well as data cleaning, manipulation, and visualization.
+The following document utilizes data from the [IBM HR Analytics Employee Attrition Dataset](https://www.kaggle.com/datasets/pavansubhasht/ibm-hr-analytics-attrition-dataset). The primary purpose is to highlight and summarize skills in R, including exploratory data analysis, as well as data cleaning, manipulation, and visualization. The packages used include the *tidyverse, ggplot2,* and *janitor*.
 
 This project also answers some brief questions regarding attrition and other metrics, while posing new areas for discussion.
 
-Several variables are analyzed to uncover the story of why this organization may be facing disproportionate rates of attrition, and while not comprehensive, recommendations are included at the end of the document for future steps.
+Several variables are analyzed to explore patterns that may contribute to elevated rates of attrition, and while not comprehensive, recommendations are included at the end of the document for future steps.
 
 It is important to note that units are not specified in the dataset for variables such as distance and income. When applicable, factors were converted using explicit scales from the information provided.
 
@@ -26,7 +26,7 @@ It is important to note that units are not specified in the dataset for variable
 
 This analysis aims to answer questions regarding employee attrition within an organization.
 
-Although the specific kinds are not explicitly outlined in this mock dataset, attrition is defined as the gradual workforce reduction through employee retirements, resignations, deaths or elimination of positions without immediately filling vacancies (Society for Human Resource Management, 2024).
+Although the specific kinds are not explicitly outlined in this mock dataset, attrition is defined as the gradual workforce reduction through employee retirements, resignations, deaths, or elimination of positions without immediately filling vacancies (Society for Human Resource Management, 2024).
 
 **Why Should Organizations Care About Attrition?**
 
@@ -176,7 +176,7 @@ The heatmap shows that attrition rates are lowest at the extreme highs of job in
 
 The following graphs outline the relationship between several factors: commute distance, satisfaction, and attrition.
 
-I decided to take a look into insights of potential areas that may serve as explanation to why employees engage in attrition.
+I explored whether these variables could provide insight into factors associated with employee attrition.
 
 To do so, I created a new feature, **satisfaction_index**, which took the average value (from a scale of 1 \[Low\] to 4 \[Very High\]) of all other satisfaction variables, including environment, job, and relationship satisfaction, as well as work life balance.
 
@@ -231,7 +231,7 @@ The graphs show that satisfaction is lower and commute distance slightly higher 
 
 Another question I wanted to examine was whether or not highly educated employees were leaving because they weren't being promoted fast enough. The dataset divides all employees into five categories of education, from "Below College" to "Doctor".
 
-The reasoning behind this was that people who pursue a higher degree of education are often ambitious people, and as such they would likely feel disdain from not being promoted in quick intervals.
+The reasoning behind this was that people who pursue a higher degree of education are often ambitious people, and as such they would likely feel frustrated from not being promoted in quick intervals.
 
 ```{r}
 # Created a new table to gain insight on employees based on their education level
@@ -248,7 +248,7 @@ group_by(education) %>%
 knitr::kable(ed_df)
 ```
 
-As seen, the education level with the highest rate of attrition was the employees who had a "Below College" level, with a rate of `r max(ed_df$attrition_rate)`%. Conversely, the education level with the lowest rate of attrition was the employees with a "Doctor" level education, with a rate of `r min(ed_df$attrition_rate)`%.
+As seen, the education group with the highest rate of attrition was employees categorized as "Below College", with a rate of `r max(ed_df$attrition_rate)`%. Conversely, the education level with the lowest rate of attrition was the employees with a "Doctor" level education, with a rate of `r min(ed_df$attrition_rate)`%.
 
 ```{r}
 #| include: false
@@ -333,7 +333,7 @@ So far, the analyses haven't painted a clear picture on what may be correlated w
 
 Are newer employees with overtime and lower satisfaction more likely to leave?
 
-\*In the following analyses, the terms"new/newer employees" are used interchangeably with short-tenure.
+\*In the following analyses, the terms "new/newer employees" are used interchangeably with short-tenure.
 
 For this question, I developed a multi-layered hypothesis:
 
@@ -349,7 +349,7 @@ Short-tenure: ≤ 2 years
 
 Mid-tenure: 3–7 years
 
-Long-tenure: 8 years
+Long-tenure: ≥8 years
 
 Satisfaction groups (relative to their satisfaction index scores) are defined as:
 
@@ -491,13 +491,31 @@ new_overtime_graph <- ggplot(new_employees,
 new_overtime_graph
 ```
 
-Again, the graph clearly shows that overtime plays a role in increasing attrition rates, but even more so for newer employees with medium and high satisfaction.
+Again, the graph clearly shows that overtime was associated with higher attrition rates, but even more so for newer employees with medium and high satisfaction.
+
+Especially when introducing variables such as overtime and satisfaction levels, it is clear that new employees are most at risk for attrition.
 
 ## Concluding Thoughts
 
+### Recommendations
+
+**Note:** The following recommendations are presented strictly for practice purposes, solely based on the patterns observed. Because this project uses a public practice dataset and descriptive methods, these recommendations should be interpreted as hypothetical business actions rather than validated organizational interventions.
+
+The strongest pattern among analyzed variables was observed when tenure, overtime, and satisfaction were examined together. Across all tenure groups, employees working overtime exhibited higher attrition rates; however, the pattern appeared especially pronounced among short-tenured employees.
+
+While more analyses should be run before making causal claims, it can be hypothesized that newer employees may be at a greater risk for early burnout or disengagement, with overtime likely being a factor (evident from their lower satisfaction and higher attrition rates).
+
+With this in mind, the organization should look to minimize overtime for newer employees, so as to prevent burnout and promote a smoother transition into their role. Additionally, they may consider prioritizing comprehensive onboarding and retention efforts. Furthermore, managers may want to consider implementing frequent pulse surveys or individual meetings to gauge newer employees' satisfaction and well-being.
+
+By ensuring new employees have access to resources to feel supported during the early stages of their tenure, the organization may see higher levels of satisfaction, which in turn may decrease rates of attrition.
+
+Future work may want to be done to measure the effectiveness of any existing training and retention programs, as they may not be strong enough for the current task force.
+
 ### Limitations
 
-### Recommendations
+1.  It is important to note that the dataset is a public practice dataset, meaning findings should be interpreted more generally rather than used as specific advice.
+2.  Analyses were conducted to be more exploratory than causal. While the patterns identified may be applicable to real-world organizations, additional inferential methods and predictive modeling should be done before making exact claims regarding relationships.
+3.  Several variables were engineered subjectively (satisfaction index, tenure categories, promotion buckets) based on analytical judgment.
 
 ### References
 

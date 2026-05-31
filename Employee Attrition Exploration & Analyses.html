@@ -72,7 +72,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="Employee Attrition Exploration &amp; Analyses_files/libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="Employee Attrition Exploration &amp; Analyses_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="Employee Attrition Exploration &amp; Analyses_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="Employee Attrition Exploration &amp; Analyses_files/libs/bootstrap/bootstrap-6324ba2a6c15dd553a683532559c618d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="Employee Attrition Exploration &amp; Analyses_files/libs/bootstrap/bootstrap-d359420eca839bd29160a783b9e344c9.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 
 
 </head>
@@ -86,6 +86,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#business-question" id="toc-business-question" class="nav-link" data-scroll-target="#business-question">Business Question</a></li>
   <li><a href="#setup" id="toc-setup" class="nav-link" data-scroll-target="#setup">Setup</a>
   <ul class="collapse">
   <li><a href="#importing-data" id="toc-importing-data" class="nav-link" data-scroll-target="#importing-data">Importing Data</a></li>
@@ -98,7 +99,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#education-insights" id="toc-education-insights" class="nav-link" data-scroll-target="#education-insights">Education Insights</a></li>
   <li><a href="#early-burnout" id="toc-early-burnout" class="nav-link" data-scroll-target="#early-burnout">Early Burnout?</a></li>
   </ul></li>
-  <li><a href="#concluding-thoughts" id="toc-concluding-thoughts" class="nav-link" data-scroll-target="#concluding-thoughts">Concluding Thoughts</a></li>
+  <li><a href="#concluding-thoughts" id="toc-concluding-thoughts" class="nav-link" data-scroll-target="#concluding-thoughts">Concluding Thoughts</a>
+  <ul class="collapse">
+  <li><a href="#limitations" id="toc-limitations" class="nav-link" data-scroll-target="#limitations">Limitations</a></li>
+  <li><a href="#recommendations" id="toc-recommendations" class="nav-link" data-scroll-target="#recommendations">Recommendations</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul></li>
   </ul>
 </nav>
 </div>
@@ -134,7 +140,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
 <p>The following document utilizes data from the <a href="https://www.kaggle.com/datasets/pavansubhasht/ibm-hr-analytics-attrition-dataset">IBM HR Analytics Employee Attrition Dataset</a>. The primary purpose was to highlight and summarize skills in R, primarily things such as exploratory data analysis, as well as data cleaning, manipulation, and visualization.</p>
 <p>This project also answers some brief questions regarding attrition and other metrics, while posing new areas for discussion.</p>
+<p>Several variables are analyzed to uncover the story of why this organization may be facing disproportionate rates of attrition, and while not comprehensive, recommendations are included at the end of the document for future steps.</p>
 <p>It is important to note that units are not specified in the dataset for variables such as distance and income. When applicable, factors were converted using explicit scales from the information provided.</p>
+</section>
+<section id="business-question" class="level2">
+<h2 class="anchored" data-anchor-id="business-question">Business Question</h2>
+<p>This analysis aims to answer questions regarding employee attrition within an organization.</p>
+<p>Although the specific kinds are not explicitly outlined in this mock dataset, attrition is defined as the gradual workforce reduction through employee retirements, resignations, deaths or elimination of positions without immediately filling vacancies (Society for Human Resource Management, 2024).</p>
+<p><strong>Why Should Organizations Care About Attrition?</strong></p>
+<p>In terms of upfront cost, U.S. companies have spent almost a trillion dollars to replace employees who quit in 2023, according to the Work Institute’s 2024 Retention Report.</p>
+<p>That alone should scare many organizations into prioritizing retention, while also learning about the underlying factors at play with their company’s attrition.</p>
 </section>
 <section id="setup" class="level2">
 <h2 class="anchored" data-anchor-id="setup">Setup</h2>
@@ -211,7 +226,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="analyses">Analyses</h2>
 <p>For the analyses, I wanted to explore different avenues that may help us get a better understanding of where attrition was more likely to occur, in turn allowing us to highlight groups that were at a bigger risk.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Created a new table highlighting employees who attritted, selecting some specific variables</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Created a new table highlighting employees who left, selecting some specific variables</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>attrition_data <span class="ot">&lt;-</span> hr_eda <span class="sc">%&gt;%</span> </span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(attrition <span class="sc">==</span> <span class="st">"Yes"</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(employee_number, distance_from_home, education, environment_satisfaction, </span>
@@ -220,8 +235,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <section id="engagement-insights" class="level3">
 <h3 class="anchored" data-anchor-id="engagement-insights">Engagement Insights</h3>
-<p>Upon my initial glance at the data, the first question that caught my eye was about the relationship between job involvement and satisfaction, which I called “job engagement”.</p>
-<p>[Add more about why I chose these variables?]</p>
+<p>Upon my initial glance at the data, the first question that caught my eye was about the relationship between job involvement and satisfaction, which I defined as “job engagement”.</p>
+<p>I picked these variables because they are commonly associated with employee attrition and represent two complementary dimensions of an employee’s experience.</p>
+<p>Here, I created a heatmap to highlight the relationship these two factors had with attrition rates.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Created a new table to display the attrition rates of each job involvement and satisfaction pair</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>engagement_df <span class="ot">&lt;-</span> hr_eda <span class="sc">%&gt;%</span> </span>
@@ -256,7 +272,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>The heatmap shows that attrition rates are lowest at the extreme highs of job involvement and satisfaction. In fact, the rate for employees with both very high job involvement and satisfaction is 2.38%. As shown in the graphic, as these engagement levels decrease, attrition rates tend to increase.</p>
+<p>The heatmap shows that attrition rates are lowest at the extreme highs of job involvement and satisfaction. Notably, the rate for employees with both very high job involvement and satisfaction is 2.38%. As shown in the graphic, as these engagement levels decrease, attrition rates tend to increase.</p>
 </section>
 <section id="commute-and-satisfaction" class="level3">
 <h3 class="anchored" data-anchor-id="commute-and-satisfaction">Commute and Satisfaction</h3>
@@ -323,7 +339,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>The graphs mentioned above show that satisfaction is lower and commute distance slightly higher for employees experiencing attrition, although there isn’t a strong relationship between satisfaction and commute distance themselves.</p>
+<p>The graphs show that satisfaction is lower and commute distance slightly higher for employees experiencing attrition, although there isn’t a strong relationship between satisfaction and commute distance themselves.</p>
 </section>
 <section id="education-insights" class="level3">
 <h3 class="anchored" data-anchor-id="education-insights">Education Insights</h3>
@@ -380,7 +396,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h4 class="anchored" data-anchor-id="graph-of-breakdown-by-years-since-last-promotion">Graph of Breakdown by Years Since Last Promotion</h4>
 <p>I created buckets based on when the employee was last promoted, with two graphs to display both the count and proportion of employees who experienced attrition.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Created graph showing employees who attritted based on years since their last promotion</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Created graph showing employees who left based on years since their last promotion</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>promo_graph_count <span class="ot">&lt;-</span> education_data <span class="sc">%&gt;%</span> </span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">years_bucket =</span> <span class="fu">cut</span>(years_since_last_promotion,</span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>                            <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">6</span>, <span class="dv">9</span>, <span class="dv">12</span>, <span class="dv">15</span>),</span>
@@ -411,7 +427,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Created table and graph to show the proportion of employees who attritted based on years since their last promotion</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Created table and graph to show the proportion of employees who left based on years since their last promotion</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>promo_prop_df <span class="ot">&lt;-</span> education_data <span class="sc">%&gt;%</span> </span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">years_bucket =</span> <span class="fu">cut</span>(years_since_last_promotion,</span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>                            <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">6</span>, <span class="dv">9</span>, <span class="dv">12</span>, <span class="dv">15</span>),</span>
@@ -564,12 +580,12 @@ Note
 </div>
 </div>
 </div>
-<p>From the graphs, we can see that most attrition occurs in the first bucket, when it has been 0-3 years since an employee’s last promotion. We can also see that attritted employees with doctor’s degrees did not stay longer than 4-6 years after their last promotion.</p>
+<p>From the graphs, we can see that most attrition occurs in the first bucket, when it has been 0-3 years since an employee’s last promotion. We can also see that employees with doctor’s degrees who experienced attrition did not stay longer than 4-6 years after their last promotion.</p>
 </section>
 </section>
 <section id="early-burnout" class="level3">
 <h3 class="anchored" data-anchor-id="early-burnout">Early Burnout?</h3>
-<p>So far, most of the analyses haven’t painted a clear picture on what may be correlated with attrition. The final dynamic I wanted to examine was the effects of overtime on employees, specifically:</p>
+<p>So far, the analyses haven’t painted a clear picture on what may be correlated with attrition. The final dynamic I wanted to examine was the effects of overtime on employees, specifically:</p>
 <p>Are newer employees with overtime and lower satisfaction more likely to leave?</p>
 <p>*In the following analyses, the terms”new/newer employees” are used interchangeably with short-tenure.</p>
 <p>For this question, I developed a multi-layered hypothesis:</p>
@@ -776,7 +792,7 @@ Note
 </table>
 </div>
 </div>
-<p>This table outlines the top five segments of employees with the highest attrition rates, i.e.&nbsp;those most at risk for attrition. As expected, newer employees comprised four of the five highest rates, with most being in the “Low” satisfaction group.</p>
+<p>This table outlines the top five segments of employees with the highest attrition rates—those most at risk for attrition. As expected, newer employees comprised four of the five highest rates, with most being in the “Low” satisfaction group.</p>
 <p>Overall, the results suggest an interaction between tenure, overtime, and satisfaction. The highest attrition rate was a dangerous 63.64%, where short tenure, overtime, and low satisfaction were observed.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a graph to display effects of overtime on different tenure groups</span></span>
@@ -840,10 +856,23 @@ Note
 </div>
 </div>
 </div>
+<p>Again, the graph clearly shows that overtime plays a role in increasing attrition rates, but even more so for newer employees with medium and high satisfaction.</p>
 </section>
 </section>
 <section id="concluding-thoughts" class="level2">
 <h2 class="anchored" data-anchor-id="concluding-thoughts">Concluding Thoughts</h2>
+<section id="limitations" class="level3">
+<h3 class="anchored" data-anchor-id="limitations">Limitations</h3>
+</section>
+<section id="recommendations" class="level3">
+<h3 class="anchored" data-anchor-id="recommendations">Recommendations</h3>
+</section>
+<section id="references" class="level3">
+<h3 class="anchored" data-anchor-id="references">References</h3>
+<p>IBM. (n.d.). <em>IBM HR analytics employee attrition &amp; performance dataset</em>. Kaggle. <a href="https://www.kaggle.com/datasets/pavansubhasht/ibm-hr-analytics-attrition-dataset" class="uri">https://www.kaggle.com/datasets/pavansubhasht/ibm-hr-analytics-attrition-dataset</a></p>
+<p>Ruehl, E. (2024, April 15). <em>Attrition: Definition, types, causes &amp; mitigation tips</em>. Society for Human Resource Management. <a href="https://www.shrm.org/topics-tools/news/employee-relations/attrition-definition-types-causes-mitigation-tips?utm_source=chatgpt.com">https://www.shrm.org/topics-tools/news/employee-relations/attrition-definition-types-causes-mitigation-tips</a></p>
+<p>Work Institute. (2024). <em>2024 retention report: Decoding the emerging workforce to accelerate retention, engagement, and profits</em>. <a href="https://info.workinstitute.com/hubfs/2024%20Retention%20Report/Work%20Institute%202024%20Retention%20Report.pdf?utm_source=chatgpt.com">https://info.workinstitute.com/hubfs/2024%20Retention%20Report/Work%20Institute%202024%20Retention%20Report.pdf</a></p>
+</section>
 </section>
 
 </main>
