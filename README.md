@@ -62,7 +62,9 @@ output/
 
 ---
 ## Key Visualizations
-<img src="output/figures/overtime_graph.png" width="400"/>
+<img src="output/figures/overtime_graph.png" width="500"/>
+
+<img src="output/figures/engagement_heatmap.png" width="500"/>
 
 
 → More located within `output/figures/`
