@@ -1,7 +1,5 @@
 # IBM Employee Attrition Analysis
 
-![Preview](output/figures/overtime_graph.png)
-
 ## Overview
 
 This project utilizes data from the [IBM HR Analytics Employee Attrition Dataset](https://www.kaggle.com/datasets/pavansubhasht/ibm-hr-analytics-attrition-dataset).
@@ -56,7 +54,7 @@ Tools used:
 
 ## View Full Analysis
 
-→ Open `reports/employee_attrition_analysis.html`
+→ Open `employee_attrition_analyses.qmd`
 
 ---
 
@@ -76,4 +74,4 @@ figures/
 - Statistical testing
 - SQL integration
 - Interactive dashboard
-- Predictive modeling
+- Predictive modeling/ML
