@@ -52,12 +52,6 @@ Tools used:
 
 ---
 
-## View Full Analysis
-
-→ Open `employee_attrition_analyses.qmd`
-
----
-
 ## Repository Structure
 
 ```plaintext
@@ -67,6 +61,15 @@ data/
 output/
   figures/
 ```
+
+## View Full Analysis
+
+→ Open `employee_attrition_analyses.qmd`
+
+---
+## View Visualizations
+
+→ Open `output/figures/`
 
 ---
 
