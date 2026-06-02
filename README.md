@@ -1,6 +1,6 @@
 # IBM Employee Attrition Analysis
 
-![Preview](figures/dashboard_preview.png)
+![Preview](output/figures/overtime_graph)
 
 ## Overview
 
