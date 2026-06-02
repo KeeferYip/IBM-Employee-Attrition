@@ -7,8 +7,16 @@ This project utilizes data from the [IBM HR Analytics Employee Attrition Dataset
 **Attrition** is defined as the gradual workforce reduction through employee retirements, resignations, deaths, or elimination of positions without immediately filling vacancies (Society for Human Resource Management, 2024).
 
 Objective:
-Showcase skills in R such as data manipulation and visualization, as well as use exploratory data analysis and feature engineering to create insights from data. 
+Showcase skills in R such as data manipulation and visualization, as well as use exploratory data analysis and feature engineering to create insights regarding attrition from data. 
 
+---
+## Skills Demonstrated
+- Data Cleaning and Manipulation in R
+- Exploratory Data Analysis 
+- Feature Engineering
+- Data Visualization
+- Translating data insights into business recommendations
+  
 ---
 
 ## Business Questions
