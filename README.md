@@ -62,9 +62,10 @@ Tools used:
 
 ```plaintext
 data/
-scripts/
-reports/
-figures/
+  raw/
+  processed/
+output/
+  figures/
 ```
 
 ---
