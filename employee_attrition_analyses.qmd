@@ -171,6 +171,13 @@ engagement_heatmap <- ggplot(engagement_df) +
   graph_theme
 
 engagement_heatmap
+
+# Saved plot
+ggsave("output/figures/engagement_heatmap.png", 
+       plot = engagement_heatmap,
+       width = 7,
+       height = 5,
+       dpi = 300)
 ```
 
 The heatmap shows that attrition rates are lowest at the extreme highs of job involvement and satisfaction. Notably, the rate for employees with both very high job involvement and satisfaction is `r min(engagement_df$attrition_rate)`%. As shown in the graphic, as these engagement levels decrease, attrition rates tend to increase.
@@ -200,7 +207,8 @@ hr_features <- hr_features %>%
     )
 
 # Graph the relationship between satisfaction and attrition
-ggplot(hr_features, aes(satisfaction_index, attrition)) +
+satisfaction_attrition_boxplot <- ggplot(hr_features, 
+                                         aes(satisfaction_index, attrition)) +
   geom_boxplot() +
   labs(
     title = "Satisfaction Index and Attrition", 
@@ -208,8 +216,18 @@ ggplot(hr_features, aes(satisfaction_index, attrition)) +
     y = "Attrition") +
   graph_theme
 
+# Saved plot
+ggsave("output/figures/satisfaction_attrition_boxplot.png", 
+       plot = satisfaction_attrition_boxplot,
+       width = 7,
+       height = 5,
+       dpi = 300)
+
+satisfaction_attrition_boxplot
+
 # Graph the relationship between commute distance and attrition
-ggplot(hr_features, aes(distance_from_home, attrition)) +
+commute_attrition_bopxplot <- ggplot(hr_features, 
+                                     aes(distance_from_home, attrition)) +
   geom_boxplot() +
   labs(
     title = "Commute and Attrition", 
@@ -217,8 +235,18 @@ ggplot(hr_features, aes(distance_from_home, attrition)) +
     y = "Attrition") +
   graph_theme
 
+# Saved plot
+ggsave("output/figures/commute_attrition_bopxplot.png", 
+       plot = commute_attrition_bopxplot,
+       width = 7,
+       height = 5,
+       dpi = 300)
+
+commute_attrition_bopxplot
+
 # Graph the relationship between commute distance and satisfaction
-ggplot(hr_features, aes(distance_from_home, satisfaction_index)) +
+commute_satisfaction_plot <- ggplot(hr_features, 
+                                    aes(distance_from_home, satisfaction_index)) +
   geom_jitter(alpha = 0.2, width = 0.3) +
   geom_smooth(method = "loess") +
   labs(
@@ -226,6 +254,15 @@ ggplot(hr_features, aes(distance_from_home, satisfaction_index)) +
     x = "Commute Distance", 
     y = "Satisfaction Index Score") +
   graph_theme
+
+# Saved plot
+ggsave("output/figures/commute_satisfaction_plot.png", 
+       plot = commute_satisfaction_plot,
+       width = 7,
+       height = 5,
+       dpi = 300)
+
+commute_satisfaction_plot
 ```
 
 The graphs show that satisfaction is lower and commute distance slightly higher for employees experiencing attrition, although there isn't a strong relationship between satisfaction and commute distance themselves.
@@ -281,7 +318,14 @@ promo_graph_count <- education_data %>%
        fill = "Education Level") +
   graph_theme +
   scale_fill_brewer(palette = "Accent")
-      
+
+# Saved plot
+ggsave("output/figures/promo_graph_count.png", 
+       plot = promo_graph_count,
+       width = 7,
+       height = 5,
+       dpi = 300)
+
 promo_graph_count
 ```
 
@@ -324,7 +368,14 @@ promo_graph_prop <- promo_prop_df %>%
        fill = "Education Level") +
   graph_theme + 
   scale_fill_brewer(palette = "Accent")
-      
+
+# Saved plot
+ggsave("output/figures/promo_graph_prop.png", 
+       plot = promo_graph_prop,
+       width = 7,
+       height = 5,
+       dpi = 300)
+
 promo_graph_prop
 ```
 
@@ -461,6 +512,13 @@ overtime_graph <- ggplot(hr_features, aes(x = tenure, fill = attrition)) +
   graph_theme +
   scale_fill_manual(values = c("No" = "grey80", "Yes" = "#D55E00"))
 
+# Saved plot
+ggsave("output/figures/overtime_graph.png", 
+       plot = overtime_graph,
+       width = 7,
+       height = 5,
+       dpi = 300)
+
 overtime_graph
 ```
 
@@ -490,6 +548,13 @@ new_overtime_graph <- ggplot(new_employees,
     ) +
   graph_theme +
   scale_fill_manual(values = c("No" = "grey80", "Yes" = "#D55E00"))
+
+# Saved plot
+ggsave("output/figures/new_overtime_graph.png", 
+       plot = new_overtime_graph,
+       width = 7,
+       height = 5,
+       dpi = 300)
 
 new_overtime_graph
 ```
