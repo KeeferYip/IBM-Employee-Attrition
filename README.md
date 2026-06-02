@@ -40,20 +40,19 @@ Tools used:
 
 ## Key Findings
 
-### Overtime strongly correlates with attrition, especially in newer employees
-
-The strongest pattern among analyzed variables was observed when tenure, overtime, and satisfaction were examined together. Across all tenure groups, employees working overtime exhibited higher attrition rates; however, the pattern appeared especially pronounced among short-tenured employees.
-
+- Overtime is highly related to increased attrition rates
+- New employees are most likely to leave
+- Even more, new employees with overtime are the individuals at the highest risk for attrition
 ---
 
 ## Repository Structure
 
 ```plaintext
-data/
-  raw/
-  processed/
+data/        
+  raw/        # Original data
+  processed/  # Cleaned dataset
 output/
-  figures/
+  figures/    # Generated visualizations
 ```
 
 ## View Full Analysis
@@ -62,9 +61,11 @@ output/
 → Open [employee_attrition_analyses.qmd](employee_attrition_analyses.qmd)
 
 ---
-## View Visualizations
+## Key Visualizations
+<img src="output/figures/overtime_graph.png" width="400"/>
 
-→ Open `output/figures/`
+
+→ More located within `output/figures/`
 
 ---
 
