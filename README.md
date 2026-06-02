@@ -58,8 +58,8 @@ output/
 
 ## View Full Analysis
 
-[→ Open](employee_attrition_analyses.qmd)
-→ Open `employee_attrition_analyses.qmd`
+
+→ Open `[employee_attrition_analyses.qmd](employee_attrition_analyses.qmd)`
 
 ---
 ## View Visualizations
