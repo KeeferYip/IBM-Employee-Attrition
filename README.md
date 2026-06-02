@@ -56,6 +56,7 @@ data/
   processed/  # Cleaned dataset
 output/
   figures/    # Generated visualizations
+scripts/      # Only includes a setup.R script
 ```
 
 ---
