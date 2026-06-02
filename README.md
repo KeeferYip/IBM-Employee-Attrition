@@ -28,7 +28,7 @@ Showcase skills in R such as data manipulation and visualization, as well as use
 - Visualization
 - Business Interpretation
 
-Packages used: 
+Tools used: 
 ```plaintext
 - R
 - Tidyverse
