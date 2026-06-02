@@ -8,6 +8,5 @@
 
 # R markdown / knitted output
 *_files/
-output/
 *.html
 
