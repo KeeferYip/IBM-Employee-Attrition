@@ -4,33 +4,37 @@
 
 ## Overview
 
-This project analyzes employee attrition patterns using the IBM HR dataset.
+This project utilizes data from the [IBM HR Analytics Employee Attrition Dataset](https://www.kaggle.com/datasets/pavansubhasht/ibm-hr-analytics-attrition-dataset).
 
 Objective:
-Identify workplace factors associated with turnover and translate findings into actionable HR recommendations.
+Showcase skills in R such as data manipulation and visualization, as well as use exploratory data analysis and feature engineering to create insights from data. 
 
 ---
 
 ## Business Questions
 
+**What is attrition and why does it matter?**
+
+- How do commutes affect job satisfaction?
+-  Does overtime increase turnover?
 - Which employee groups show the highest attrition?
-- Does overtime increase turnover?
-- How do compensation and job characteristics relate to retention?
 
 ---
 
 ## Methods
 
-- Data Cleaning
+- Data Manipulation
 - Exploratory Data Analysis
 - Visualization
 - Business Interpretation
 
-Tools:
+Packages used: 
+```plaintext
 - R
 - Tidyverse
+- Packages: ggplot2 & janitor
 - Quarto
-- ggplot2
+```
 
 ---
 
