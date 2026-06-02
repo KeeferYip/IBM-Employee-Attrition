@@ -51,7 +51,7 @@ library(janitor)
 #| label: data-import
 
 # Load the dataset
-hr_data <- read_csv("data/WA_Fn-UseC_-HR-Employee-Attrition.csv")
+hr_data <- read_csv("data/raw/WA_Fn-UseC_-HR-Employee-Attrition.csv")
 ```
 
 ```{r}
@@ -75,6 +75,9 @@ hr_features <- hr_data %>%
   select(employee_number, attrition, age, 
          years_at_company, over_time, distance_from_home, 
          ends_with("_satisfaction"), work_life_balance) 
+
+# Save data in folder
+readr::write_csv(hr_features, "data/processed/hr_features.csv")
 
 
 # Creating vector for following ordinal factor creation, all have the same factor levels and labels
